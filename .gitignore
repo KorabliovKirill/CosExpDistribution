@@ -1,2 +1,7 @@
 .git
 build
+graphs/.venv
+graphs/distributions
+graphs/mix_distributions
+graphs/emp_distributions
+.vscode

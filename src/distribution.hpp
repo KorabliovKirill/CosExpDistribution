@@ -7,7 +7,8 @@
 #include <vector>
 #include <fstream>
 
-class MainDistribution {
+class MainDistribution
+{
 private:
 	double v, mu, lambda, a, K, P;
 	std::mt19937 generator;
@@ -25,5 +26,5 @@ public:
 	double excessKurtosis();
 	double GetP();
 	double generate();
-	void generateGraphPoints(double minX, double maxX, int numPoints, const std::string& filename);
+	void generateGraphPoints(std::string filename);
 };
