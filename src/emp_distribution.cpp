@@ -215,10 +215,10 @@ namespace EmpDistribution
         }
 
         // Константы для построения графика
-        const int N = 1000;                                            // Количество точек
-        double x1 = *std::min_element(samples.begin(), samples.end()); // Минимальное значение из выборки
-        double x2 = *std::max_element(samples.begin(), samples.end()); // Максимальное значение
-        double dx = (x2 - x1) / (double)(N - 1);                       // Шаг изменения x
+        const int N = 1000;                      // Количество точек
+        double x1 = -10;                         // Минимальное значение из выборки
+        double x2 = 10;                          // Максимальное значение
+        double dx = (x2 - x1) / (double)(N - 1); // Шаг изменения x
 
         std::ofstream file(filename);
         if (!file)

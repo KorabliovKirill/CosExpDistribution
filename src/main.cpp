@@ -97,7 +97,8 @@ void EmpDistributionWork()
 	int n;
 	double x, v, mu, lambda, v2, mu2, lambda2, p;
 	static int s_emp_number = 1;
-	std::string name = "emp_distribution";
+	std::string name_emp = "emp_distribution";
+	std::string name = "distribution";
 
 	double temp;
 	std::vector<double> samples;
@@ -138,8 +139,10 @@ void EmpDistributionWork()
 	// std::cout << "Mix Parameter(p): ";
 	// std::cin >> p;
 
+	std::string file_name_emp = emp_distributions_path + name_emp + std::to_string(s_emp_number) + ".txt";
+	EmpDistribution::generateGraphPoints(samples, file_name_emp);
 	std::string file_name = emp_distributions_path + name + std::to_string(s_emp_number) + ".txt";
-	EmpDistribution::generateGraphPoints(samples, file_name);
+	dist.generateGraphPoints(file_name);
 	s_emp_number++;
 }
 
