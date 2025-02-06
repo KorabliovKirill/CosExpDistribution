@@ -169,51 +169,49 @@ void EmpMixDistributionWork()
 
 void Tests()
 {
-	std::ofstream logFile("../tests/test_log.txt"); // Открываем файл для записи
+	std::string logFilePath = "../tests/test_log.txt";
+	std::ofstream logFile(logFilePath, std::ios::out | std::ios::trunc);
+
 	if (!logFile)
 	{
-		std::cerr << "Ошибка открытия файла test_log.txt" << std::endl;
+		std::cerr << "Ошибка открытия файла: " << logFilePath << std::endl;
 		return;
 	}
 
-	auto log = [&](const std::string &msg)
-	{
-		std::cout << msg << std::endl;
-		logFile << msg << std::endl;
-	};
+	logFile << "Test 1 (Main distribution, mu=0, lambda=1):" << std::endl;
+	MainDistributionTest(distributions_path, 0.5, 0, 1, logFile);
+	logFile << "==========================" << std::endl;
 
-	log("Test 1 (Main distribution, mu=0, lambda=1):");
-	MainDistributionTest(distributions_path, 0.5, 0, 1);
-	log("==========================");
+	logFile << "Test 2 (Main distribution, mu!=0, lambda=2):" << std::endl;
+	MainDistributionTest(distributions_path, 0.2, -3, 2, logFile);
+	logFile << "==========================" << std::endl;
 
-	log("Test 2 (Main distribution, mu!=0, lambda=2):");
-	MainDistributionTest(distributions_path, 0.2, -3, 2);
-	log("==========================");
+	logFile << "Test 3 (Mix distribution, mu1=mu2!=0, lambda1=lambda2=2, v1-v2):" << std::endl;
+	MixDistributionTest(mix_distributions_path, 0.5, -3, 2, 0.5, -3, 2, 0.7, logFile);
+	logFile << "==========================" << std::endl;
 
-	log("Test 3 (Mix distribution, mu1=mu2!=0, lambda1=lambda2=2, v1-v2):");
-	MixDistributionTest(mix_distributions_path, 0.5, -3, 2, 0.5, -3, 2, 0.7);
-	log("==========================");
+	logFile << "Test 4 (Mix distribution, mu1!=m2, p = 0.5):" << std::endl;
+	MixDistributionTest(mix_distributions_path, 1, -3, 1, 1, 2, 1, 0.5, logFile);
+	logFile << "==========================" << std::endl;
 
-	log("Test 4 (Mix distribution, mu1!=m2, p = 0.5):");
-	MixDistributionTest(mix_distributions_path, 1, -3, 1, 1, 2, 1, 0.5);
-	log("==========================");
+	logFile << "Test 5 (Mix distribution, mu1=mu2=0, lambda1=1, lambda2=3, p = 0.5):" << std::endl;
+	MixDistributionTest(mix_distributions_path, 0.2, 0, 1, 0.2, 0, 3, 0.5, logFile);
+	logFile << "==========================" << std::endl;
 
-	log("Test 5 (Mix distribution, mu1=mu2=0, lambda1=1, lambda2=3, p = 0.5):");
-	MixDistributionTest(mix_distributions_path, 0.2, 0, 1, 0.2, 0, 3, 0.5);
-	log("==========================");
-
-	log("Test 6 (3.3.1)");
+	logFile << "Test 6 (3.3.1)" << std::endl;
 	std::vector<int> N = {100, 1000, 10000, 100000};
-	for (int i = 0; i < N.size(); ++i)
+	for (size_t i = 0; i < N.size(); ++i)
 	{
-		EmpDistributionTest1(emp_distributions_path, 0.4, -3, 1, N[i]);
-		log("==========================");
-		EmpDistributionTest1(emp_distributions_path, 0.3, -2, 1, 0.6, 2, 4, 0.8, N[i]);
-		log("==========================");
+		EmpDistributionTest1(emp_distributions_path, 0.4, -3, 1, N[i], logFile);
+		logFile << "==========================" << std::endl;
+		EmpDistributionTest1(emp_distributions_path, 0.3, -2, 1, 0.6, 2, 4, 0.8, N[i], logFile);
+		logFile << "==========================" << std::endl;
 	}
 
-	log("==========================");
-	logFile.close(); // Закрываем файл после завершения записи
+	logFile << "==========================" << std::endl;
+	logFile.close();
+
+	std::cout << "Все тесты пройдены. Результаты сохранены в " << logFilePath << std::endl;
 }
 
 int main()
