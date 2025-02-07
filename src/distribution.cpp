@@ -13,11 +13,7 @@ MainDistribution::MainDistribution(double v, double mu, double lambda)
 	addCalculation();
 }
 
-MainDistribution::MainDistribution()
-	: v(1), mu(0), lambda(1), generator(std::random_device{}()), uniform(0.0, 1.0)
-{
-	addCalculation();
-}
+MainDistribution::~MainDistribution() {};
 
 double MainDistribution::pdf(double x)
 {
@@ -50,7 +46,29 @@ double MainDistribution::excessKurtosis()
 	return 4.0 / (pow(variance(), 2) * pow(M_PI, 5) * K) * (term1 + term2) + term3 - 3.0;
 }
 
+double MainDistribution::GetV() { return v; }
+
+double MainDistribution::SetV(double v) { this->v = v; }
+
+double MainDistribution::GetMu() { return mu; }
+
+double MainDistribution::SetMu(double mu) { this->mu = mu; }
+
+double MainDistribution::GetLambda() { return lambda; }
+
+double MainDistribution::SetLambda(double lambda) { this->lambda = lambda; }
+
+double MainDistribution::GetA() { return a; }
+
+double MainDistribution::SetA(double a) { this->a = a; }
+
+double MainDistribution::GetK() { return K; }
+
+double MainDistribution::SetK(double K) { this->K = K; }
+
 double MainDistribution::GetP() { return P; }
+
+double MainDistribution::SetP(double P) { this->P = P; }
 
 double MainDistribution::generate()
 {
