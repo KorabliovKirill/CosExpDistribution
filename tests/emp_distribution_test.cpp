@@ -10,7 +10,28 @@ void EmpDistributionTest1(std::string emp_distributions_path, double v, double m
     logFile << "Shift Parameter(mu): " << mu << std::endl;
     logFile << "Scale Parameter(lambda): " << lambda << std::endl;
 
-    MainDistribution dist(v, mu, lambda);
+    MainDistribution dist;
+    try
+    {
+        dist.SetV(v);
+    }
+    catch (char const *exV)
+    {
+        std::cout << exV << std::endl;
+        std::abort();
+    }
+
+    try
+    {
+        dist.SetLambda(lambda);
+    }
+    catch (char const *exLambda)
+    {
+        std::cout << exLambda << std::endl;
+        std::abort();
+    }
+
+    dist.SetMu(mu);
 
     samples = EmpDistribution::samples(n, v, mu, lambda);
 

@@ -7,8 +7,8 @@ void MainDistribution::addCalculation()
 	P = (sin(M_PI * v) / M_PI + v) / K;
 }
 
-MainDistribution::MainDistribution(double v, double mu, double lambda)
-	: v(v), mu(mu), lambda(lambda), generator(std::random_device{}()), uniform(0.0, 1.0)
+MainDistribution::MainDistribution()
+	: v(0.5), mu(0), lambda(1), generator(std::random_device{}()), uniform(0.0, 1.0)
 {
 	addCalculation();
 }
@@ -48,27 +48,21 @@ double MainDistribution::excessKurtosis()
 
 double MainDistribution::GetV() { return v; }
 
-double MainDistribution::SetV(double v) { this->v = v; }
+void MainDistribution::SetV(double v) { this->v = v > 0 && v < 1 ? v : throw "0 < v < 1 !!!"; }
 
 double MainDistribution::GetMu() { return mu; }
 
-double MainDistribution::SetMu(double mu) { this->mu = mu; }
+void MainDistribution::SetMu(double mu) { this->mu = mu; }
 
 double MainDistribution::GetLambda() { return lambda; }
 
-double MainDistribution::SetLambda(double lambda) { this->lambda = lambda; }
+void MainDistribution::SetLambda(double lambda) { this->lambda = lambda > 0 ? lambda : throw "lambda > 0 !!!"; }
 
 double MainDistribution::GetA() { return a; }
 
-double MainDistribution::SetA(double a) { this->a = a; }
-
 double MainDistribution::GetK() { return K; }
 
-double MainDistribution::SetK(double K) { this->K = K; }
-
 double MainDistribution::GetP() { return P; }
-
-double MainDistribution::SetP(double P) { this->P = P; }
 
 double MainDistribution::generate()
 {

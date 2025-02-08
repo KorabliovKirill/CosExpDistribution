@@ -160,7 +160,29 @@ namespace EmpDistribution
             throw std::invalid_argument("Sample size n must be greater than 0.");
         }
 
-        MainDistribution dist(v, mu, lambda);
+        MainDistribution dist;
+
+        try
+        {
+            dist.SetV(v);
+        }
+        catch (char const *exV)
+        {
+            std::cout << exV << std::endl;
+            std::abort();
+        }
+
+        try
+        {
+            dist.SetLambda(lambda);
+        }
+        catch (char const *exLambda)
+        {
+            std::cout << exLambda << std::endl;
+            std::abort();
+        }
+
+        dist.SetMu(mu);
 
         std::vector<double> samples;
         samples.reserve(n); // Резервируем память заранее для улучшения производительности

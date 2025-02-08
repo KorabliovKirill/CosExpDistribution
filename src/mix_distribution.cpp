@@ -4,24 +4,45 @@ namespace MixDistribution
 {
     double pdf(double x, double v1, double mu1, double lambda1, double v2, double mu2, double lambda2, double p)
     {
-        MainDistribution dist1(v1, mu1, lambda1);
-        MainDistribution dist2(v2, mu2, lambda2);
+        MainDistribution dist1;
+        MainDistribution dist2;
+
+        dist1.SetV(v1);
+        dist1.SetLambda(lambda1);
+        dist1.SetMu(mu1);
+        dist2.SetV(v2);
+        dist2.SetLambda(lambda2);
+        dist2.SetMu(mu2);
 
         return (1 - p) * dist1.pdf(x) + p * dist2.pdf(x);
     }
 
     double expectation(double v1, double mu1, double lambda1, double v2, double mu2, double lambda2, double p)
     {
-        MainDistribution dist1(v1, mu1, lambda1);
-        MainDistribution dist2(v2, mu2, lambda2);
+        MainDistribution dist1;
+        MainDistribution dist2;
+
+        dist1.SetV(v1);
+        dist1.SetLambda(lambda1);
+        dist1.SetMu(mu1);
+        dist2.SetV(v2);
+        dist2.SetLambda(lambda2);
+        dist2.SetMu(mu2);
 
         return (1 - p) * dist1.expectation() + p * dist2.expectation();
     }
 
     double variance(double v1, double mu1, double lambda1, double v2, double mu2, double lambda2, double p)
     {
-        MainDistribution dist1(v1, mu1, lambda1);
-        MainDistribution dist2(v2, mu2, lambda2);
+        MainDistribution dist1;
+        MainDistribution dist2;
+
+        dist1.SetV(v1);
+        dist1.SetLambda(lambda1);
+        dist1.SetMu(mu1);
+        dist2.SetV(v2);
+        dist2.SetLambda(lambda2);
+        dist2.SetMu(mu2);
 
         double term1 = (1 - p) * (pow(dist1.expectation(), 2) + dist1.variance());
         double term2 = p * (pow(dist2.expectation(), 2) + dist2.variance());
@@ -30,8 +51,15 @@ namespace MixDistribution
 
     double skewness(double v1, double mu1, double lambda1, double v2, double mu2, double lambda2, double p)
     {
-        MainDistribution dist1(v1, mu1, lambda1);
-        MainDistribution dist2(v2, mu2, lambda2);
+        MainDistribution dist1;
+        MainDistribution dist2;
+
+        dist1.SetV(v1);
+        dist1.SetLambda(lambda1);
+        dist1.SetMu(mu1);
+        dist2.SetV(v2);
+        dist2.SetLambda(lambda2);
+        dist2.SetMu(mu2);
 
         double M1 = dist1.expectation();
         double M2 = dist2.expectation();
@@ -47,8 +75,15 @@ namespace MixDistribution
 
     double excessKurtosis(double v1, double mu1, double lambda1, double v2, double mu2, double lambda2, double p)
     {
-        MainDistribution dist1(v1, mu1, lambda1);
-        MainDistribution dist2(v2, mu2, lambda2);
+        MainDistribution dist1;
+        MainDistribution dist2;
+
+        dist1.SetV(v1);
+        dist1.SetLambda(lambda1);
+        dist1.SetMu(mu1);
+        dist2.SetV(v2);
+        dist2.SetLambda(lambda2);
+        dist2.SetMu(mu2);
 
         double M1 = dist1.expectation();
         double M2 = dist2.expectation();
@@ -66,8 +101,15 @@ namespace MixDistribution
     {
         std::uniform_real_distribution<double> uniform(0.0, 1.0);
         std::mt19937 generator(std::random_device{}());
-        MainDistribution dist1(v1, mu1, lambda1);
-        MainDistribution dist2(v2, mu2, lambda2);
+        MainDistribution dist1;
+        MainDistribution dist2;
+
+        dist1.SetV(v1);
+        dist1.SetLambda(lambda1);
+        dist1.SetMu(mu1);
+        dist2.SetV(v2);
+        dist2.SetLambda(lambda2);
+        dist2.SetMu(mu2);
 
         double r = uniform(generator);
         return (p < r) ? dist1.generate() : dist2.generate();

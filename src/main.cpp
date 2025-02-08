@@ -13,17 +13,40 @@ void MainDistributionWork()
 {
 	double v, mu, lambda, x;
 	static int s_number = 1;
+	MainDistribution dist;
+	std::string name = "distribution";
+
 	std::cout << "X: ";
 	std::cin >> x;
-	std::string name = "distribution";
-	std::cout << "Form Parameter(v): ";
+	std::cout << "Form Parameter(v, default = 0.5): ";
 	std::cin >> v;
-	std::cout << "Shift Parameter(mu): ";
+	std::cout << "Shift Parameter(mu, default = 0): ";
 	std::cin >> mu;
-	std::cout << "Scale Parameter(lambda): ";
+	std::cout << "Scale Parameter(lambda, default = 1): ";
 	std::cin >> lambda;
 
-	MainDistribution dist(v, mu, lambda);
+	try
+	{
+		dist.SetV(v);
+	}
+	catch (char const *exV)
+	{
+		std::cout << exV << std::endl;
+		std::abort();
+	}
+
+	try
+	{
+		dist.SetLambda(lambda);
+	}
+	catch (char const *exLambda)
+	{
+		std::cout << exLambda << std::endl;
+		std::abort();
+	}
+
+	dist.SetMu(mu);
+
 	std::cout << "Mathematical Expectation: " << dist.expectation() << std::endl;
 	std::cout << "Variance: " << dist.variance() << std::endl;
 	std::cout << "Excess Kurtosis: " << dist.excessKurtosis() << std::endl;
@@ -45,22 +68,38 @@ void MixDistributionWork()
 	std::cout << "X: ";
 	std::cin >> x;
 	std::string name = "mix_distribution";
-	std::cout << "Form Parameter(v1): ";
+	std::cout << "Form Parameter(v1, default = 0.5): ";
 	std::cin >> v1;
-	std::cout << "Shift Parameter(mu1): ";
+	std::cout << "Shift Parameter(mu1, default = 0): ";
 	std::cin >> mu1;
-	std::cout << "Scale Parameter(lambda1): ";
+	std::cout << "Scale Parameter(lambda1, default = 1): ";
 	std::cin >> lambda1;
 
-	std::cout << "Form Parameter(v2): ";
+	std::cout << "Form Parameter(v2, default = 0.5): ";
 	std::cin >> v2;
-	std::cout << "Shift Parameter(mu2): ";
+	std::cout << "Shift Parameter(mu2, default = 0): ";
 	std::cin >> mu2;
-	std::cout << "Scale Parameter(lambda2): ";
+	std::cout << "Scale Parameter(lambda2, default = 1): ";
 	std::cin >> lambda2;
 
 	std::cout << "Mix Parameter(p): ";
 	std::cin >> p;
+
+	if (p < 0 || p > 1)
+	{
+		std::cout << "0 < p < 1 !!!" << std::endl;
+		std::abort();
+	}
+	else if (v1 < 0 || v1 > 1 || v2 < 0 || v2 > 1)
+	{
+		std::cout << "0 < v < 1 !!!" << std::endl;
+		std::abort();
+	}
+	if (lambda1 <= 0 || lambda2 <= 0)
+	{
+		std::cout << " lambda > 0 !!!" << std::endl;
+		std::abort();
+	}
 
 	std::cout << "Mathematical Expectation: " << MixDistribution::expectation(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
 	std::cout << "Variance: " << MixDistribution::variance(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
@@ -77,7 +116,7 @@ void MixDistributionWork()
 void EmpMainDistributionWork()
 {
 	int n;
-	double x, v, mu, lambda, v2, mu2, lambda2, p;
+	double x, v, mu, lambda;
 	static int s_emp_number = 1;
 	std::string name_emp = "emp_distribution";
 	std::string name = "distribution";
@@ -88,14 +127,36 @@ void EmpMainDistributionWork()
 	std::cin >> x;
 	std::cout << "N: ";
 	std::cin >> n;
-	std::cout << "Form Parameter(v): ";
+	std::cout << "Form Parameter(v, default = 0.5): ";
 	std::cin >> v;
-	std::cout << "Shift Parameter(mu): ";
+	std::cout << "Shift Parameter(mu, default = 0): ";
 	std::cin >> mu;
-	std::cout << "Scale Parameter(lambda): ";
+	std::cout << "Scale Parameter(lambda, default = 1): ";
 	std::cin >> lambda;
 
-	MainDistribution dist(v, mu, lambda);
+	MainDistribution dist;
+
+	try
+	{
+		dist.SetV(v);
+	}
+	catch (char const *exV)
+	{
+		std::cout << exV << std::endl;
+		std::abort();
+	}
+
+	try
+	{
+		dist.SetLambda(lambda);
+	}
+	catch (char const *exLambda)
+	{
+		std::cout << exLambda << std::endl;
+		std::abort();
+	}
+
+	dist.SetMu(mu);
 
 	samples = EmpDistribution::samples(n, v, mu, lambda);
 
@@ -131,21 +192,37 @@ void EmpMixDistributionWork()
 	std::cin >> x;
 	std::cout << "N: ";
 	std::cin >> n;
-	std::cout << "Form Parameter(v1): ";
+	std::cout << "Form Parameter(v1, default = 0.5): ";
 	std::cin >> v1;
-	std::cout << "Shift Parameter(mu1): ";
+	std::cout << "Shift Parameter(mu1, default = 0): ";
 	std::cin >> mu1;
-	std::cout << "Scale Parameter(lambda1): ";
+	std::cout << "Scale Parameter(lambda1, default = 1): ";
 	std::cin >> lambda1;
-	std::cout << "Form Parameter(v2): ";
+	std::cout << "Form Parameter(v2, default = 0.5): ";
 	std::cin >> v2;
-	std::cout << "Shift Parameter(mu2): ";
+	std::cout << "Shift Parameter(mu2, default = 0): ";
 	std::cin >> mu2;
-	std::cout << "Scale Parameter(lambda2): ";
+	std::cout << "Scale Parameter(lambda2, default = 1): ";
 	std::cin >> lambda2;
 
 	std::cout << "Mix Parameter(p): ";
 	std::cin >> p;
+
+	if (p < 0 || p > 1)
+	{
+		std::cout << "0 < p < 1 !!!" << std::endl;
+		std::abort();
+	}
+	else if (v1 < 0 || v1 > 1 || v2 < 0 || v2 > 1)
+	{
+		std::cout << "0 < v < 1 !!!" << std::endl;
+		std::abort();
+	}
+	if (lambda1 <= 0 || lambda2 <= 0)
+	{
+		std::cout << " lambda > 0 !!!" << std::endl;
+		std::abort();
+	}
 
 	samples = EmpDistribution::samples(n, v1, mu1, lambda1, v2, mu2, lambda2, p);
 

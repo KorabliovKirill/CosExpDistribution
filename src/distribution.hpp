@@ -17,7 +17,7 @@ private:
 	void addCalculation();
 
 public:
-	MainDistribution(double v, double mu, double lambda);
+	MainDistribution();
 	~MainDistribution();
 	double pdf(double x);
 	double expectation();
@@ -25,17 +25,14 @@ public:
 	double skewness();
 	double excessKurtosis();
 	double GetV();
-	double SetV(double v);
+	void SetV(double v);
 	double GetMu();
-	double SetMu(double mu);
+	void SetMu(double mu);
 	double GetLambda();
-	double SetLambda(double lambda);
+	void SetLambda(double lambda);
 	double GetA();
-	double SetA(double a);
 	double GetK();
-	double SetK(double K);
 	double GetP();
-	double SetP(double P);
 	double generate();
 	void generateGraphPoints(std::string filename);
 };
