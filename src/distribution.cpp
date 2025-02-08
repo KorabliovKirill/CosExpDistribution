@@ -26,7 +26,7 @@ MainDistribution::MainDistribution(FILE *file) : generator(std::random_device{}(
 		return;
 	}
 
-	fscanf(file, "%lf %lf %lf", &v, &mu, &lambda);
+	fscanf(file, "%lf\n%lf\n%lf", &v, &mu, &lambda);
 
 	addCalculation();
 }

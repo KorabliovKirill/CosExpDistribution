@@ -38,7 +38,7 @@ void MainDistributionWork()
 {
 	double x;
 	static int s_number = 1;
-	MainDistribution dist;
+	FILE *file = fopen("../res/distribution_data.txt", "r");
 	std::string name = "distribution";
 
 	std::cout << "X: ";
@@ -48,6 +48,11 @@ void MainDistributionWork()
 	double v = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
 	double mu = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
 	double lambda = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
+
+	MainDistribution dist;
+	//  MainDistribution dist(v, mu, lambda);
+	// MainDistribution dist(file);
+	// MainDistribution dist("../res/distribution_data.txt");
 
 	try
 	{
