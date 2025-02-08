@@ -6,4 +6,3 @@ graphs/mix_distributions
 graphs/emp_distributions
 .vscode
 tests/test_log.txt
-res
