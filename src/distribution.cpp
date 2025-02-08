@@ -7,13 +7,44 @@ void MainDistribution::addCalculation()
 	P = (sin(M_PI * v) / M_PI + v) / K;
 }
 
-MainDistribution::MainDistribution()
-	: v(0.5), mu(0), lambda(1), generator(std::random_device{}()), uniform(0.0, 1.0)
+MainDistribution::MainDistribution() : generator(std::random_device{}()), uniform(0.0, 1.0)
 {
 	addCalculation();
 }
 
-MainDistribution::~MainDistribution() {};
+MainDistribution::MainDistribution(double v, double mu, double lambda)
+	: v(v), mu(mu), lambda(lambda), generator(std::random_device{}()), uniform(0.0, 1.0)
+{
+	addCalculation();
+}
+
+MainDistribution::MainDistribution(FILE *file) : generator(std::random_device{}()), uniform(0.0, 1.0)
+{
+	if (!file)
+	{
+		std::cerr << "Error: Unable to open file." << std::endl;
+		return;
+	}
+
+	fscanf(file, "%lf %lf %lf", &v, &mu, &lambda);
+
+	addCalculation();
+}
+
+MainDistribution::MainDistribution(std::string path) : generator(std::random_device{}()), uniform(0.0, 1.0)
+{
+	std::ifstream file(path);
+	if (!file)
+	{
+		std::cerr << "Error: Unable to open file." << std::endl;
+		return;
+	}
+
+	file >> v >> mu >> lambda;
+	file.close();
+
+	addCalculation();
+}
 
 double MainDistribution::pdf(double x)
 {
@@ -48,15 +79,27 @@ double MainDistribution::excessKurtosis()
 
 double MainDistribution::GetV() { return v; }
 
-void MainDistribution::SetV(double v) { this->v = v > 0 && v < 1 ? v : throw "0 < v < 1 !!!"; }
+void MainDistribution::SetV(double v)
+{
+	this->v = v > 0 && v < 1 ? v : throw "0 < v < 1 !!!";
+	addCalculation();
+}
 
 double MainDistribution::GetMu() { return mu; }
 
-void MainDistribution::SetMu(double mu) { this->mu = mu; }
+void MainDistribution::SetMu(double mu)
+{
+	this->mu = mu;
+	addCalculation();
+}
 
 double MainDistribution::GetLambda() { return lambda; }
 
-void MainDistribution::SetLambda(double lambda) { this->lambda = lambda > 0 ? lambda : throw "lambda > 0 !!!"; }
+void MainDistribution::SetLambda(double lambda)
+{
+	this->lambda = lambda > 0 ? lambda : throw "lambda > 0 !!!";
+	addCalculation();
+}
 
 double MainDistribution::GetA() { return a; }
 

@@ -4,26 +4,50 @@
 #include "../tests/main_distribution_test.hpp"
 #include "../tests/mix_distribution_test.hpp"
 #include "../tests/emp_distribution_test.hpp"
+#include <sstream>
 
 std::string distributions_path = "../graphs/distributions/";
 std::string mix_distributions_path = "../graphs/mix_distributions/";
 std::string emp_distributions_path = "../graphs/emp_distributions/";
 
+double ReadDoubleOrDefault(const std::string &prompt, double defaultValue)
+{
+	while (true)
+	{
+		std::cout << prompt; // Выводим приглашение к вводу
+		std::string input;
+		std::getline(std::cin, input);
+
+		if (input.empty())
+		{
+			return defaultValue; // Если пользователь просто нажал Enter, возвращаем значение по умолчанию
+		}
+
+		std::stringstream ss(input);
+		double value;
+		if (ss >> value)
+		{
+			return value; // Если ввод успешно преобразован в число, возвращаем его
+		}
+
+		std::cout << "Некорректный ввод. Попробуйте снова.\n";
+	}
+}
+
 void MainDistributionWork()
 {
-	double v, mu, lambda, x;
+	double x;
 	static int s_number = 1;
 	MainDistribution dist;
 	std::string name = "distribution";
 
 	std::cout << "X: ";
 	std::cin >> x;
-	std::cout << "Form Parameter(v, default = 0.5): ";
-	std::cin >> v;
-	std::cout << "Shift Parameter(mu, default = 0): ";
-	std::cin >> mu;
-	std::cout << "Scale Parameter(lambda, default = 1): ";
-	std::cin >> lambda;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Очистка буфера после ввода числа
+
+	double v = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+	double mu = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+	double lambda = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
 
 	try
 	{
@@ -62,28 +86,23 @@ void MainDistributionWork()
 
 void MixDistributionWork()
 {
-	double x, v1, mu1, lambda1, v2, mu2, lambda2, p;
+	double x;
 	static int s_mix_number = 1;
+	std::string name = "mix_distribution";
 
 	std::cout << "X: ";
 	std::cin >> x;
-	std::string name = "mix_distribution";
-	std::cout << "Form Parameter(v1, default = 0.5): ";
-	std::cin >> v1;
-	std::cout << "Shift Parameter(mu1, default = 0): ";
-	std::cin >> mu1;
-	std::cout << "Scale Parameter(lambda1, default = 1): ";
-	std::cin >> lambda1;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-	std::cout << "Form Parameter(v2, default = 0.5): ";
-	std::cin >> v2;
-	std::cout << "Shift Parameter(mu2, default = 0): ";
-	std::cin >> mu2;
-	std::cout << "Scale Parameter(lambda2, default = 1): ";
-	std::cin >> lambda2;
+	double v1 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+	double mu1 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+	double lambda1 = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
 
-	std::cout << "Mix Parameter(p): ";
-	std::cin >> p;
+	double v2 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+	double mu2 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+	double lambda2 = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
+
+	double p = ReadDoubleOrDefault("Form Parameter (p, default = 0.5): ", 0.5);
 
 	if (p < 0 || p > 1)
 	{
@@ -116,7 +135,7 @@ void MixDistributionWork()
 void EmpMainDistributionWork()
 {
 	int n;
-	double x, v, mu, lambda;
+	double x;
 	static int s_emp_number = 1;
 	std::string name_emp = "emp_distribution";
 	std::string name = "distribution";
@@ -127,12 +146,11 @@ void EmpMainDistributionWork()
 	std::cin >> x;
 	std::cout << "N: ";
 	std::cin >> n;
-	std::cout << "Form Parameter(v, default = 0.5): ";
-	std::cin >> v;
-	std::cout << "Shift Parameter(mu, default = 0): ";
-	std::cin >> mu;
-	std::cout << "Scale Parameter(lambda, default = 1): ";
-	std::cin >> lambda;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+	double v = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+	double mu = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+	double lambda = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
 
 	MainDistribution dist;
 
@@ -181,7 +199,7 @@ void EmpMainDistributionWork()
 void EmpMixDistributionWork()
 {
 	int n;
-	double x, v1, mu1, lambda1, v2, mu2, lambda2, p;
+	double x;
 	static int s_emp_number = 1;
 	std::string name_emp = "emp_distribution";
 	std::string name = "mix_distribution";
@@ -192,21 +210,17 @@ void EmpMixDistributionWork()
 	std::cin >> x;
 	std::cout << "N: ";
 	std::cin >> n;
-	std::cout << "Form Parameter(v1, default = 0.5): ";
-	std::cin >> v1;
-	std::cout << "Shift Parameter(mu1, default = 0): ";
-	std::cin >> mu1;
-	std::cout << "Scale Parameter(lambda1, default = 1): ";
-	std::cin >> lambda1;
-	std::cout << "Form Parameter(v2, default = 0.5): ";
-	std::cin >> v2;
-	std::cout << "Shift Parameter(mu2, default = 0): ";
-	std::cin >> mu2;
-	std::cout << "Scale Parameter(lambda2, default = 1): ";
-	std::cin >> lambda2;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-	std::cout << "Mix Parameter(p): ";
-	std::cin >> p;
+	double v1 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+	double mu1 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+	double lambda1 = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
+
+	double v2 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+	double mu2 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+	double lambda2 = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
+
+	double p = ReadDoubleOrDefault("Form Parameter (p, default = 0.5): ", 0.5);
 
 	if (p < 0 || p > 1)
 	{

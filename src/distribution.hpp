@@ -10,15 +10,20 @@
 class MainDistribution
 {
 private:
-	double v, mu, lambda, a, K, P;
+	double v = 0.5;
+	double mu = 0;
+	double lambda = 1;
+	double a, K, P;
 	std::mt19937 generator;
-	std::uniform_real_distribution<double> uniform;
+	std::uniform_real_distribution<double> uniform{0.0, 1.0};
 
 	void addCalculation();
 
 public:
 	MainDistribution();
-	~MainDistribution();
+	MainDistribution(double v, double mu, double lambda);
+	MainDistribution(FILE *file);
+	MainDistribution(std::string path);
 	double pdf(double x);
 	double expectation();
 	double variance();
