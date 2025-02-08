@@ -46,6 +46,26 @@ MainDistribution::MainDistribution(std::string path) : generator(std::random_dev
 	addCalculation();
 }
 
+MainDistribution::~MainDistribution()
+{
+	static int s_res_number = 1;
+	std::string path = "../res/distribution_result";
+	std::string file_name = path + std::to_string(s_res_number) + ".txt";
+	std::ofstream file(file_name);
+
+	file << "Form Parameter(v): " << v << std::endl;
+	file << "Shift Parameter(mu): " << mu << std::endl;
+	file << "Scale Parameter(lambda): " << lambda << std::endl;
+
+	file << "Mathematical Expectation: " << expectation() << std::endl;
+	file << "Variance: " << variance() << std::endl;
+	file << "Excess Kurtosis: " << excessKurtosis() << std::endl;
+	file << "P: " << GetP() << std::endl;
+	file << "PDF: " << pdf(0) << std::endl;
+
+	s_res_number++;
+}
+
 double MainDistribution::pdf(double x)
 {
 	double z = (x - mu) / lambda;

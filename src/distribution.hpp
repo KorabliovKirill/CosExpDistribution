@@ -24,6 +24,7 @@ public:
 	MainDistribution(double v, double mu, double lambda);
 	MainDistribution(FILE *file);
 	MainDistribution(std::string path);
+	~MainDistribution();
 	double pdf(double x);
 	double expectation();
 	double variance();
