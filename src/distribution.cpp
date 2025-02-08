@@ -81,7 +81,7 @@ double MainDistribution::GetV() { return v; }
 
 void MainDistribution::SetV(double v)
 {
-	this->v = v > 0 && v < 1 ? v : throw "0 < v < 1 !!!";
+	this->v = v > 0 && v <= 1 ? v : throw "0 < v < 1 !!!";
 	addCalculation();
 }
 

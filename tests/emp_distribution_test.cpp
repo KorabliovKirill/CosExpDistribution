@@ -26,7 +26,7 @@ void EmpDistributionTest1(std::string emp_distributions_path, double v, double m
     logFile << "Skewness: " << EmpDistribution::skewness(samples) << std::endl;
     logFile << "ER Skewness: " << fabs(EmpDistribution::skewness(samples) - dist.skewness()) << std::endl;
     logFile << "Excess Kurtosis: " << EmpDistribution::excessKurtosis(samples) << std::endl;
-    logFile << "ER Excess Kurtosis: " << fabs(EmpDistribution::excessKurtosis(samples) - dist.skewness()) << std::endl;
+    logFile << "ER Excess Kurtosis: " << fabs(EmpDistribution::excessKurtosis(samples) - dist.excessKurtosis()) << std::endl;
     logFile << "N = " << n << std::endl;
 
     std::string file_name_emp = emp_distributions_path + "emp_main_distribution_test" + std::to_string(s_test_emp_main_number) + ".txt";
@@ -70,4 +70,80 @@ void EmpDistributionTest1(std::string emp_distributions_path, double v1, double 
     std::string file_name = emp_distributions_path + "mix_distribution_test" + std::to_string(s_test_emp_mix_number) + ".txt";
     MixDistribution::generateGraphPoints(v1, mu1, lambda1, v2, mu2, lambda2, p, file_name);
     s_test_emp_mix_number++;
+}
+
+void EmpDistributionTest2(std::string emp_distributions_path, double v, double mu, double lambda, int n, std::ofstream &logFile)
+{
+    static int s_test_emp_main_two_number = 1;
+
+    std::vector<double> samplesOne;
+    std::vector<double> samplesTwo;
+
+    logFile << "Form Parameter(v): " << v << std::endl;
+    logFile << "Shift Parameter(mu): " << mu << std::endl;
+    logFile << "Scale Parameter(lambda): " << lambda << std::endl;
+
+    MainDistribution dist;
+    dist.SetV(v);
+    dist.SetLambda(lambda);
+    dist.SetMu(mu);
+
+    samplesOne = EmpDistribution::samples(n, v, mu, lambda);
+    samplesTwo = EmpDistribution::samples(n, v, mu, lambda);
+
+    logFile << "PDF: " << EmpDistribution::pdf(0, samplesTwo) << std::endl;
+    logFile << "ER PDF: " << fabs(EmpDistribution::pdf(0, samplesTwo) - EmpDistribution::pdf(0, samplesOne)) << std::endl;
+    logFile << "Mathematical Expectation: " << EmpDistribution::expectation(samplesTwo) << std::endl;
+    logFile << "ER Mathematical Expectation: " << fabs(EmpDistribution::expectation(samplesTwo) - EmpDistribution::expectation(samplesOne)) << std::endl;
+    logFile << "Variance: " << EmpDistribution::variance(samplesTwo) << std::endl;
+    logFile << "ER Variance: " << fabs(EmpDistribution::variance(samplesTwo) - EmpDistribution::variance(samplesOne)) << std::endl;
+    logFile << "Skewness: " << EmpDistribution::skewness(samplesTwo) << std::endl;
+    logFile << "ER Skewness: " << fabs(EmpDistribution::skewness(samplesTwo) - EmpDistribution::skewness(samplesOne)) << std::endl;
+    logFile << "Excess Kurtosis: " << EmpDistribution::excessKurtosis(samplesTwo) << std::endl;
+    logFile << "ER Excess Kurtosis: " << fabs(EmpDistribution::excessKurtosis(samplesTwo) - EmpDistribution::excessKurtosis(samplesOne)) << std::endl;
+    logFile << "N = " << n << std::endl;
+
+    std::string file_name_emp = emp_distributions_path + "emp_main_distribution_test_two" + std::to_string(s_test_emp_main_two_number) + ".txt";
+    EmpDistribution::generateGraphPoints(samplesTwo, file_name_emp);
+    std::string file_name = emp_distributions_path + "distribution_test_two" + std::to_string(s_test_emp_main_two_number) + ".txt";
+    dist.generateGraphPoints(file_name);
+    s_test_emp_main_two_number++;
+}
+
+void EmpDistributionTest2(std::string emp_distributions_path, double v1, double mu1, double lambda1, double v2, double mu2, double lambda2, double p, int n, std::ofstream &logFile)
+{
+    static int s_test_emp_mix_two_number = 1;
+
+    double temp;
+    std::vector<double> samplesOne;
+    std::vector<double> samplesTwo;
+
+    logFile << "Form Parameter(v1): " << v1 << std::endl;
+    logFile << "Shift Parameter(mu1): " << mu1 << std::endl;
+    logFile << "Scale Parameter(lambda1): " << lambda1 << std::endl;
+    logFile << "Form Parameter(v2): " << v2 << std::endl;
+    logFile << "Shift Parameter(mu2): " << mu2 << std::endl;
+    logFile << "Scale Parameter(lambda2): " << lambda2 << std::endl;
+    logFile << "Mix Parameter(p): " << p << std::endl;
+
+    samplesOne = EmpDistribution::samples(n, v1, mu1, lambda1, v2, mu2, lambda2, p);
+    samplesTwo = EmpDistribution::samples(n, v1, mu1, lambda1, v2, mu2, lambda2, p);
+
+    logFile << "PDF: " << EmpDistribution::pdf(0, samplesTwo) << std::endl;
+    logFile << "ER PDF: " << fabs(EmpDistribution::pdf(0, samplesTwo) - EmpDistribution::pdf(0, samplesOne)) << std::endl;
+    logFile << "Mathematical Expectation: " << EmpDistribution::expectation(samplesTwo) << std::endl;
+    logFile << "ER Mathematical Expectation: " << fabs(EmpDistribution::expectation(samplesTwo) - EmpDistribution::expectation(samplesOne)) << std::endl;
+    logFile << "Variance: " << EmpDistribution::variance(samplesTwo) << std::endl;
+    logFile << "ER Variance: " << fabs(EmpDistribution::variance(samplesTwo) - EmpDistribution::variance(samplesOne)) << std::endl;
+    logFile << "Skewness: " << EmpDistribution::skewness(samplesTwo) << std::endl;
+    logFile << "ER Skewness: " << fabs(EmpDistribution::skewness(samplesTwo) - EmpDistribution::skewness(samplesOne)) << std::endl;
+    logFile << "Excess Kurtosis: " << EmpDistribution::excessKurtosis(samplesTwo) << std::endl;
+    logFile << "ER Excess Kurtosis: " << fabs(EmpDistribution::excessKurtosis(samplesTwo) - EmpDistribution::excessKurtosis(samplesOne)) << std::endl;
+    logFile << "N = " << n << std::endl;
+
+    std::string file_name_emp = emp_distributions_path + "emp_mix_distribution_test_two" + std::to_string(s_test_emp_mix_two_number) + ".txt";
+    EmpDistribution::generateGraphPoints(samplesTwo, file_name_emp);
+    std::string file_name = emp_distributions_path + "mix_distribution_test_two" + std::to_string(s_test_emp_mix_two_number) + ".txt";
+    MixDistribution::generateGraphPoints(v1, mu1, lambda1, v2, mu2, lambda2, p, file_name);
+    s_test_emp_mix_two_number++;
 }

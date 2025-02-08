@@ -304,6 +304,15 @@ void Tests()
 		logFile << "==========================" << std::endl;
 	}
 
+	logFile << "Test 7 (3.3.2)" << std::endl;
+	for (size_t i = 0; i < N.size(); ++i)
+	{
+		EmpDistributionTest2(emp_distributions_path, 0.4, -3, 1, N[i], logFile);
+		logFile << "==========================" << std::endl;
+		EmpDistributionTest2(emp_distributions_path, 0.3, -2, 1, 0.6, 2, 4, 0.8, N[i], logFile);
+		logFile << "==========================" << std::endl;
+	}
+
 	logFile << "==========================" << std::endl;
 	logFile.close();
 
