@@ -12,13 +12,18 @@ void MixDistributionTest(std::string mix_distributions_path, double v1, double m
     logFile << "Scale Parameter(lambda2): " << lambda2 << std::endl;
     logFile << "Mix Parameter(p): " << p << std::endl;
 
-    logFile << "Mathematical Expectation: " << MixDistribution::expectation(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
-    logFile << "Variance: " << MixDistribution::variance(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
-    logFile << "Excess Kurtosis: " << MixDistribution::excessKurtosis(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
-    logFile << "Skewness: " << MixDistribution::skewness(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
-    logFile << "PDF: " << MixDistribution::pdf(0, v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
+    MainDistribution dist1(v1, mu1, lambda1);
+    MainDistribution dist2(v2, mu2, lambda2);
+
+    MixDistribution mix_dist(dist1, dist2, p);
+
+    logFile << "Mathematical Expectation: " << mix_dist.expectation() << std::endl;
+    logFile << "Variance: " << mix_dist.variance() << std::endl;
+    logFile << "Excess Kurtosis: " << mix_dist.excessKurtosis() << std::endl;
+    logFile << "Skewness: " << mix_dist.skewness() << std::endl;
+    logFile << "PDF: " << mix_dist.pdf(0) << std::endl;
 
     std::string file_name = mix_distributions_path + "mix_distribution_test" + std::to_string(s_test_mix_number) + ".txt";
-    MixDistribution::generateGraphPoints(v1, mu1, lambda1, v2, mu2, lambda2, p, file_name);
+    mix_dist.generateGraphPoints(file_name);
     s_test_mix_number++;
 }

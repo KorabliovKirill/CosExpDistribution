@@ -10,6 +10,56 @@ std::string distributions_path = "../graphs/distributions/";
 std::string mix_distributions_path = "../graphs/mix_distributions/";
 std::string emp_distributions_path = "../graphs/emp_distributions/";
 
+double ReadDoubleOrDefault(const std::string &prompt, double defaultValue);
+void MainDistributionWork();
+void MixDistributionWork();
+void EmpMainDistributionWork();
+void EmpMixDistributionWork();
+void Tests();
+
+int main()
+{
+	int switcher;
+	bool exit = false;
+
+	while (!exit)
+	{
+		std::cout << "1. Main Distribution" << std::endl;
+		std::cout << "2. Mix Distribution" << std::endl;
+		std::cout << "3. Empiric Main Distribution" << std::endl;
+		std::cout << "4. Empiric Mix Distribution" << std::endl;
+		std::cout << "5. Tests" << std::endl;
+		std::cout << "0. Exit" << std::endl;
+		std::cin >> switcher;
+
+		switch (switcher)
+		{
+		case (1):
+			MainDistributionWork();
+			break;
+		case (2):
+			MixDistributionWork();
+			break;
+		case (3):
+			EmpMainDistributionWork();
+			break;
+		case (4):
+			EmpMixDistributionWork();
+			break;
+		case (5):
+			Tests();
+			break;
+		case (0):
+			exit = true;
+			break;
+
+		default:
+			std::cout << "Error! Try again." << std::endl;
+			break;
+		}
+	}
+}
+
 double ReadDoubleOrDefault(const std::string &prompt, double defaultValue)
 {
 	while (true)
@@ -109,31 +159,19 @@ void MixDistributionWork()
 
 	double p = ReadDoubleOrDefault("Form Parameter (p, default = 0.5): ", 0.5);
 
-	if (p < 0 || p > 1)
-	{
-		std::cout << "0 < p < 1 !!!" << std::endl;
-		std::abort();
-	}
-	else if (v1 < 0 || v1 > 1 || v2 < 0 || v2 > 1)
-	{
-		std::cout << "0 < v < 1 !!!" << std::endl;
-		std::abort();
-	}
-	if (lambda1 <= 0 || lambda2 <= 0)
-	{
-		std::cout << " lambda > 0 !!!" << std::endl;
-		std::abort();
-	}
+	MixDistribution mix_dist;
+	mix_dist.SetM1(MainDistribution(v1, mu1, lambda1));
+	mix_dist.SetM2(MainDistribution(v2, mu2, lambda2));
 
-	std::cout << "Mathematical Expectation: " << MixDistribution::expectation(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
-	std::cout << "Variance: " << MixDistribution::variance(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
-	std::cout << "Excess Kurtosis: " << MixDistribution::excessKurtosis(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
-	std::cout << "Skewness: " << MixDistribution::skewness(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
-	std::cout << "PDF: " << MixDistribution::pdf(x, v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
-	std::cout << "Random sample: " << MixDistribution::generate(v1, mu1, lambda1, v2, mu2, lambda2, p) << std::endl;
+	std::cout << "Mathematical Expectation: " << mix_dist.expectation() << std::endl;
+	std::cout << "Variance: " << mix_dist.variance() << std::endl;
+	std::cout << "Excess Kurtosis: " << mix_dist.excessKurtosis() << std::endl;
+	std::cout << "Skewness: " << mix_dist.skewness() << std::endl;
+	std::cout << "PDF: " << mix_dist.pdf(x) << std::endl;
+	std::cout << "Random sample: " << mix_dist.generate() << std::endl;
 
 	std::string file_name = mix_distributions_path + name + std::to_string(s_mix_number) + ".txt";
-	MixDistribution::generateGraphPoints(v1, mu1, lambda1, v2, mu2, lambda2, p, file_name);
+	mix_dist.generateGraphPoints(file_name);
 	s_mix_number++;
 }
 
@@ -142,7 +180,7 @@ void EmpMainDistributionWork()
 	int n;
 	double x;
 	static int s_emp_number = 1;
-	std::string name_emp = "emp_distribution";
+	std::string name_emp = "emp_main_distribution";
 	std::string name = "distribution";
 
 	std::vector<double> samples;
@@ -181,21 +219,21 @@ void EmpMainDistributionWork()
 
 	dist.SetMu(mu);
 
-	samples = EmpDistribution::samples(n, v, mu, lambda);
+	EmpiricalDistribution emp_dist(dist, n);
 
-	std::cout << "PDF: " << EmpDistribution::pdf(x, samples) << std::endl;
-	std::cout << "ER PDF: " << fabs(EmpDistribution::pdf(x, samples) - dist.pdf(x)) << std::endl;
-	std::cout << "Mathematical Expectation: " << EmpDistribution::expectation(samples) << std::endl;
-	std::cout << "ER Mathematical Expectation: " << fabs(EmpDistribution::expectation(samples) - dist.expectation()) << std::endl;
-	std::cout << "Variance: " << EmpDistribution::variance(samples) << std::endl;
-	std::cout << "ER Variance: " << fabs(EmpDistribution::variance(samples) - dist.variance()) << std::endl;
-	std::cout << "Skewness: " << EmpDistribution::skewness(samples) << std::endl;
-	std::cout << "ER Skewness: " << fabs(EmpDistribution::skewness(samples) - dist.skewness()) << std::endl;
-	std::cout << "Excess Kurtosis: " << EmpDistribution::excessKurtosis(samples) << std::endl;
-	std::cout << "ER Excess Kurtosis: " << fabs(EmpDistribution::excessKurtosis(samples) - dist.excessKurtosis()) << std::endl;
+	std::cout << "PDF: " << emp_dist.pdf(x) << std::endl;
+	std::cout << "ER PDF: " << fabs(emp_dist.pdf(x) - dist.pdf(x)) << std::endl;
+	std::cout << "Mathematical Expectation: " << emp_dist.expectation() << std::endl;
+	std::cout << "ER Mathematical Expectation: " << fabs(emp_dist.expectation() - dist.expectation()) << std::endl;
+	std::cout << "Variance: " << emp_dist.variance() << std::endl;
+	std::cout << "ER Variance: " << fabs(emp_dist.variance() - dist.variance()) << std::endl;
+	std::cout << "Skewness: " << emp_dist.skewness() << std::endl;
+	std::cout << "ER Skewness: " << fabs(emp_dist.skewness() - dist.skewness()) << std::endl;
+	std::cout << "Excess Kurtosis: " << emp_dist.excessKurtosis() << std::endl;
+	std::cout << "ER Excess Kurtosis: " << fabs(emp_dist.excessKurtosis() - dist.excessKurtosis()) << std::endl;
 
 	std::string file_name_emp = emp_distributions_path + name_emp + std::to_string(s_emp_number) + ".txt";
-	EmpDistribution::generateGraphPoints(samples, file_name_emp);
+	emp_dist.generateGraphPoints(file_name_emp);
 	std::string file_name = emp_distributions_path + name + std::to_string(s_emp_number) + ".txt";
 	dist.generateGraphPoints(file_name);
 	s_emp_number++;
@@ -206,7 +244,7 @@ void EmpMixDistributionWork()
 	int n;
 	double x;
 	static int s_emp_number = 1;
-	std::string name_emp = "emp_distribution";
+	std::string name_emp = "emp_mix_distribution";
 	std::string name = "mix_distribution";
 
 	std::vector<double> samples;
@@ -227,39 +265,27 @@ void EmpMixDistributionWork()
 
 	double p = ReadDoubleOrDefault("Form Parameter (p, default = 0.5): ", 0.5);
 
-	if (p < 0 || p > 1)
-	{
-		std::cout << "0 < p < 1 !!!" << std::endl;
-		std::abort();
-	}
-	else if (v1 < 0 || v1 > 1 || v2 < 0 || v2 > 1)
-	{
-		std::cout << "0 < v < 1 !!!" << std::endl;
-		std::abort();
-	}
-	if (lambda1 <= 0 || lambda2 <= 0)
-	{
-		std::cout << " lambda > 0 !!!" << std::endl;
-		std::abort();
-	}
+	MixDistribution mix_dist;
+	mix_dist.SetM1(MainDistribution(v1, mu1, lambda1));
+	mix_dist.SetM2(MainDistribution(v2, mu2, lambda2));
 
-	samples = EmpDistribution::samples(n, v1, mu1, lambda1, v2, mu2, lambda2, p);
+	EmpiricalDistribution emp_dist(mix_dist, n);
 
-	std::cout << "PDF: " << EmpDistribution::pdf(x, samples) << std::endl;
-	std::cout << "ER PDF: " << fabs(EmpDistribution::pdf(x, samples) - MixDistribution::pdf(x, v1, mu1, lambda1, v2, mu2, lambda2, p)) << std::endl;
-	std::cout << "Mathematical Expectation: " << EmpDistribution::expectation(samples) << std::endl;
-	std::cout << "ER Mathematical Expectation: " << fabs(EmpDistribution::expectation(samples) - MixDistribution::expectation(v1, mu1, lambda1, v2, mu2, lambda2, p)) << std::endl;
-	std::cout << "Variance: " << EmpDistribution::variance(samples) << std::endl;
-	std::cout << "ER Variance: " << fabs(EmpDistribution::variance(samples) - MixDistribution::variance(v1, mu1, lambda1, v2, mu2, lambda2, p)) << std::endl;
-	std::cout << "Skewness: " << EmpDistribution::skewness(samples) << std::endl;
-	std::cout << "ER Skewness: " << fabs(EmpDistribution::skewness(samples) - MixDistribution::skewness(v1, mu1, lambda1, v2, mu2, lambda2, p)) << std::endl;
-	std::cout << "Excess Kurtosis: " << EmpDistribution::excessKurtosis(samples) << std::endl;
-	std::cout << "ER Excess Kurtosis: " << fabs(EmpDistribution::excessKurtosis(samples) - MixDistribution::excessKurtosis(v1, mu1, lambda1, v2, mu2, lambda2, p)) << std::endl;
+	std::cout << "PDF: " << emp_dist.pdf(x) << std::endl;
+	std::cout << "ER PDF: " << fabs(emp_dist.pdf(x) - mix_dist.pdf(x)) << std::endl;
+	std::cout << "Mathematical Expectation: " << emp_dist.expectation() << std::endl;
+	std::cout << "ER Mathematical Expectation: " << fabs(emp_dist.expectation() - mix_dist.expectation()) << std::endl;
+	std::cout << "Variance: " << emp_dist.variance() << std::endl;
+	std::cout << "ER Variance: " << fabs(emp_dist.variance() - mix_dist.variance()) << std::endl;
+	std::cout << "Skewness: " << emp_dist.skewness() << std::endl;
+	std::cout << "ER Skewness: " << fabs(emp_dist.skewness() - mix_dist.skewness()) << std::endl;
+	std::cout << "Excess Kurtosis: " << emp_dist.excessKurtosis() << std::endl;
+	std::cout << "ER Excess Kurtosis: " << fabs(emp_dist.excessKurtosis() - mix_dist.excessKurtosis()) << std::endl;
 
 	std::string file_name_emp = emp_distributions_path + name_emp + std::to_string(s_emp_number) + ".txt";
-	EmpDistribution::generateGraphPoints(samples, file_name_emp);
+	emp_dist.generateGraphPoints(file_name_emp);
 	std::string file_name = emp_distributions_path + name + std::to_string(s_emp_number) + ".txt";
-	MixDistribution::generateGraphPoints(v1, mu1, lambda1, v2, mu2, lambda2, p, file_name);
+	mix_dist.generateGraphPoints(file_name);
 	s_emp_number++;
 }
 
@@ -317,47 +343,4 @@ void Tests()
 	logFile.close();
 
 	std::cout << "Все тесты пройдены. Результаты сохранены в " << logFilePath << std::endl;
-}
-
-int main()
-{
-	int switcher;
-	bool exit = false;
-
-	while (!exit)
-	{
-		std::cout << "1. Main Distribution" << std::endl;
-		std::cout << "2. Mix Distribution" << std::endl;
-		std::cout << "3. Empiric Main Distribution" << std::endl;
-		std::cout << "4. Empiric Mix Distribution" << std::endl;
-		std::cout << "5. Tests" << std::endl;
-		std::cout << "0. Exit" << std::endl;
-		std::cin >> switcher;
-
-		switch (switcher)
-		{
-		case (1):
-			MainDistributionWork();
-			break;
-		case (2):
-			MixDistributionWork();
-			break;
-		case (3):
-			EmpMainDistributionWork();
-			break;
-		case (4):
-			EmpMixDistributionWork();
-			break;
-		case (5):
-			Tests();
-			break;
-		case (0):
-			exit = true;
-			break;
-
-		default:
-			std::cout << "Error! Try again." << std::endl;
-			break;
-		}
-	}
 }

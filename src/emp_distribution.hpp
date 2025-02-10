@@ -3,16 +3,39 @@
 #include "distribution.hpp"
 #include "mix_distribution.hpp"
 
-namespace EmpDistribution
+class EmpiricalDistribution
 {
-    double pdf(double x, std::vector<double> &samples);
-    double expectation(std::vector<double> &samples);
-    double variance(std::vector<double> &samples);
-    double skewness(std::vector<double> &samples);
-    double excessKurtosis(std::vector<double> &samples);
-    std::vector<double> generate(int n, std::vector<double> &samples);
-    std::vector<double> samples(int n, double v, double mu, double lambda);
-    std::vector<double> samples(int n, double v1, double mu1, double lambda1, double v2, double mu2, double lambda2, double p);
-    std::vector<double> samples(int n, std::vector<double> &samples);
-    void generateGraphPoints(std::vector<double> &samples, std::string filename);
-}
+private:
+    std::vector<double> samples_;
+    std::vector<double> density_;
+    size_t size_;
+    double min_;
+    double max_;
+
+    void calculateDensity();
+
+public:
+    // Конструкторы
+    EmpiricalDistribution();
+    EmpiricalDistribution(const std::vector<double> &samples, size_t size);
+    EmpiricalDistribution(const MainDistribution &dist, int n);
+    EmpiricalDistribution(const MixDistribution &dist, int n);
+
+    // Конструктор копирования
+    EmpiricalDistribution(const EmpiricalDistribution &other);
+
+    // Оператор присваивания
+    EmpiricalDistribution &operator=(const EmpiricalDistribution &other);
+
+    // Деструктор
+    ~EmpiricalDistribution();
+
+    // Методы
+    double pdf(double x) const;
+    double expectation() const;
+    double variance() const;
+    double skewness() const;
+    double excessKurtosis() const;
+    std::vector<double> generate(int n) const;
+    void generateGraphPoints(const std::string &filename) const;
+};

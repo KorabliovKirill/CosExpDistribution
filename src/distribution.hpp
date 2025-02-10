@@ -6,16 +6,17 @@
 #include <random>
 #include <vector>
 #include <fstream>
+#include <algorithm>
 
 class MainDistribution
 {
 private:
-	double v = 0.5;
-	double mu = 0;
-	double lambda = 1;
+	double v;
+	double mu;
+	double lambda;
 	double a, K, P;
-	std::mt19937 generator;
-	std::uniform_real_distribution<double> uniform{0.0, 1.0};
+	mutable std::mt19937 generator;
+	mutable std::uniform_real_distribution<double> uniform;
 
 	void addCalculation();
 
@@ -25,20 +26,20 @@ public:
 	MainDistribution(FILE *file);
 	MainDistribution(std::string path);
 	~MainDistribution();
-	double pdf(double x);
-	double expectation();
-	double variance();
-	double skewness();
-	double excessKurtosis();
-	double GetV();
+	double pdf(double x) const;
+	double expectation() const;
+	double variance() const;
+	double skewness() const;
+	double excessKurtosis() const;
+	double GetV() const;
 	void SetV(double v);
-	double GetMu();
+	double GetMu() const;
 	void SetMu(double mu);
-	double GetLambda();
+	double GetLambda() const;
 	void SetLambda(double lambda);
-	double GetA();
-	double GetK();
-	double GetP();
-	double generate();
+	double GetA() const;
+	double GetK() const;
+	double GetP() const;
+	double generate() const;
 	void generateGraphPoints(std::string filename);
 };

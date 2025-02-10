@@ -48,25 +48,9 @@ MainDistribution::MainDistribution(std::string path) : generator(std::random_dev
 
 MainDistribution::~MainDistribution()
 {
-	static int s_res_number = 1;
-	std::string path = "../res/distribution_result";
-	std::string file_name = path + std::to_string(s_res_number) + ".txt";
-	std::ofstream file(file_name);
-
-	file << "Form Parameter(v): " << v << std::endl;
-	file << "Shift Parameter(mu): " << mu << std::endl;
-	file << "Scale Parameter(lambda): " << lambda << std::endl;
-
-	file << "Mathematical Expectation: " << expectation() << std::endl;
-	file << "Variance: " << variance() << std::endl;
-	file << "Excess Kurtosis: " << excessKurtosis() << std::endl;
-	file << "P: " << GetP() << std::endl;
-	file << "PDF: " << pdf(0) << std::endl;
-
-	s_res_number++;
 }
 
-double MainDistribution::pdf(double x)
+double MainDistribution::pdf(double x) const
 {
 	double z = (x - mu) / lambda;
 	double density;
@@ -77,9 +61,9 @@ double MainDistribution::pdf(double x)
 	return density / (lambda * K);
 }
 
-double MainDistribution::expectation() { return mu; }
+double MainDistribution::expectation() const { return mu; }
 
-double MainDistribution::variance()
+double MainDistribution::variance() const
 {
 	double term1 = (pow(M_PI * v, 3) / 6.0 + (pow(M_PI * v, 2) / 2.0 - 1.0) * sin(M_PI * v) + M_PI * v * cos(M_PI * v));
 	double term2 = (2.0 * pow(cos((M_PI * v) / 2.0), 2) / (a * K)) * ((2.0 / (a * a)) + ((2.0 * v) / a) + v * v);
@@ -87,9 +71,9 @@ double MainDistribution::variance()
 	return varianceValue * lambda * lambda;
 }
 
-double MainDistribution::skewness() { return 0; }
+double MainDistribution::skewness() const { return 0; }
 
-double MainDistribution::excessKurtosis()
+double MainDistribution::excessKurtosis() const
 {
 	double term1 = (pow(M_PI * v, 5) / 20.0 + sin(M_PI * v) * ((pow(M_PI * v, 4) / 4.0) - 3.0 * pow(M_PI * v, 2) + 6.0));
 	double term2 = cos(M_PI * v) * (pow(M_PI * v, 3) - 6.0 * M_PI * v);
@@ -97,7 +81,7 @@ double MainDistribution::excessKurtosis()
 	return 4.0 / (pow(variance(), 2) * pow(M_PI, 5) * K) * (term1 + term2) + term3 - 3.0;
 }
 
-double MainDistribution::GetV() { return v; }
+double MainDistribution::GetV() const { return v; }
 
 void MainDistribution::SetV(double v)
 {
@@ -105,7 +89,7 @@ void MainDistribution::SetV(double v)
 	addCalculation();
 }
 
-double MainDistribution::GetMu() { return mu; }
+double MainDistribution::GetMu() const { return mu; }
 
 void MainDistribution::SetMu(double mu)
 {
@@ -113,7 +97,7 @@ void MainDistribution::SetMu(double mu)
 	addCalculation();
 }
 
-double MainDistribution::GetLambda() { return lambda; }
+double MainDistribution::GetLambda() const { return lambda; }
 
 void MainDistribution::SetLambda(double lambda)
 {
@@ -121,13 +105,13 @@ void MainDistribution::SetLambda(double lambda)
 	addCalculation();
 }
 
-double MainDistribution::GetA() { return a; }
+double MainDistribution::GetA() const { return a; }
 
-double MainDistribution::GetK() { return K; }
+double MainDistribution::GetK() const { return K; }
 
-double MainDistribution::GetP() { return P; }
+double MainDistribution::GetP() const { return P; }
 
-double MainDistribution::generate()
+double MainDistribution::generate() const
 {
 	while (true)
 	{
