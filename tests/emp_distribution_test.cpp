@@ -51,7 +51,7 @@ void EmpDistributionTest1(std::string emp_distributions_path, double v1, double 
     logFile << "Scale Parameter(lambda2): " << lambda2 << std::endl;
     logFile << "Mix Parameter(p): " << p << std::endl;
 
-    MixDistribution mix_dist;
+    MixDistribution<MainDistribution, MainDistribution> mix_dist;
     mix_dist.SetM1(MainDistribution(v1, mu1, lambda1));
     mix_dist.SetM2(MainDistribution(v2, mu2, lambda2));
 

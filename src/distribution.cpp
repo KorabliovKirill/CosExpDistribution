@@ -158,3 +158,28 @@ void MainDistribution::generateGraphPoints(std::string filename)
 	}
 	file.close();
 }
+
+void MainDistribution::save_params(std::string filename) const
+{ // сохранение атрибутов в файл
+	std::ofstream file(filename);
+	if (!file)
+	{
+		throw std::runtime_error("Unable to open file for saving parameters.");
+	}
+	file << v << "\n"
+		 << mu << "\n"
+		 << lambda << "\n";
+	file.close();
+}
+
+void MainDistribution::load_params(std::string filename)
+{ // загрузка атрибутов из файла
+	std::ifstream file(filename);
+	if (!file)
+	{
+		throw std::runtime_error("Unable to open file for loading parameters.");
+	}
+	file >> v >> mu >> lambda;
+	file.close();
+	addCalculation(); // Пересчитываем параметры после загрузки
+}

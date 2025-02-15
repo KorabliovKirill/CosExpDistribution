@@ -44,7 +44,7 @@ EmpiricalDistribution::EmpiricalDistribution(const std::vector<double> &samples,
     calculateDensity();
 }
 
-EmpiricalDistribution::EmpiricalDistribution(const MainDistribution &dist, int n)
+EmpiricalDistribution::EmpiricalDistribution(const IDistribution &dist, int n)
 {
     samples_.resize(n);
     for (int i = 0; i < n; ++i)
@@ -57,7 +57,7 @@ EmpiricalDistribution::EmpiricalDistribution(const MainDistribution &dist, int n
     calculateDensity();
 }
 
-EmpiricalDistribution::EmpiricalDistribution(const MixDistribution &dist, int n)
+EmpiricalDistribution::EmpiricalDistribution(const MixDistribution<MainDistribution, MainDistribution> &dist, int n)
 {
     samples_.resize(n);
     for (int i = 0; i < n; ++i)
@@ -146,19 +146,6 @@ double EmpiricalDistribution::excessKurtosis() const
     return (sum / samples_.size()) - 3;
 }
 
-std::vector<double> EmpiricalDistribution::generate(int n) const
-{
-    std::vector<double> newSamples(n);
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, samples_.size() - 1);
-    for (int i = 0; i < n; ++i)
-    {
-        newSamples[i] = samples_[dis(gen)];
-    }
-    return newSamples;
-}
-
 void EmpiricalDistribution::generateGraphPoints(const std::string &filename) const
 {
     std::ofstream file(filename);
@@ -176,5 +163,63 @@ void EmpiricalDistribution::generateGraphPoints(const std::string &filename) con
         double x = min_ + i * step;
         file << x << " " << pdf(x) << "\n";
     }
+    file.close();
+}
+
+// Реализация метода для генерации одного случайного числа
+double EmpiricalDistribution::generate() const
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, size_ - 1);
+    return samples_[dis(gen)];
+}
+
+// Реализация метода для генерации n случайных чисел
+std::vector<double> EmpiricalDistribution::generate(int n) const
+{
+    std::vector<double> result(n);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, size_ - 1);
+    for (int i = 0; i < n; ++i)
+    {
+        result[i] = samples_[dis(gen)];
+    }
+    return result;
+}
+
+// сохранение атрибутов в файл
+void EmpiricalDistribution::save_params(std::string filename) const
+{
+    std::ofstream file(filename);
+    if (!file)
+    {
+        throw std::runtime_error("Unable to open file for saving parameters.");
+    }
+    for (const auto &sample : samples_)
+    {
+        file << sample << "\n";
+    }
+    file.close();
+}
+
+void EmpiricalDistribution::load_params(std::string filename)
+{
+    std::ifstream file(filename);
+    if (!file)
+    {
+        throw std::runtime_error("Unable to open file for loading parameters.");
+    }
+    samples_.clear();
+    double sample;
+    while (file >> sample)
+    {
+        samples_.push_back(sample);
+    }
+    size_ = samples_.size();
+    min_ = *std::min_element(samples_.begin(), samples_.end());
+    max_ = *std::max_element(samples_.begin(), samples_.end());
+    calculateDensity();
     file.close();
 }

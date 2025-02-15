@@ -99,32 +99,32 @@ void MainDistributionWork()
 	double mu = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
 	double lambda = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
 
-	MainDistribution dist;
-	//  MainDistribution dist(v, mu, lambda);
+	// MainDistribution dist;
+	MainDistribution dist(v, mu, lambda);
 	// MainDistribution dist(file);
 	// MainDistribution dist("../res/distribution_data.txt");
 
-	try
-	{
-		dist.SetV(v);
-	}
-	catch (char const *exV)
-	{
-		std::cout << exV << std::endl;
-		std::abort();
-	}
+	// try
+	// {
+	// 	dist.SetV(v);
+	// }
+	// catch (char const *exV)
+	// {
+	// 	std::cout << exV << std::endl;
+	// 	std::abort();
+	// }
 
-	try
-	{
-		dist.SetLambda(lambda);
-	}
-	catch (char const *exLambda)
-	{
-		std::cout << exLambda << std::endl;
-		std::abort();
-	}
+	// try
+	// {
+	// 	dist.SetLambda(lambda);
+	// }
+	// catch (char const *exLambda)
+	// {
+	// 	std::cout << exLambda << std::endl;
+	// 	std::abort();
+	// }
 
-	dist.SetMu(mu);
+	// dist.SetMu(mu);
 
 	std::cout << "Mathematical Expectation: " << dist.expectation() << std::endl;
 	std::cout << "Variance: " << dist.variance() << std::endl;
@@ -159,7 +159,7 @@ void MixDistributionWork()
 
 	double p = ReadDoubleOrDefault("Form Parameter (p, default = 0.5): ", 0.5);
 
-	MixDistribution mix_dist;
+	MixDistribution<MainDistribution, MainDistribution> mix_dist;
 	mix_dist.SetM1(MainDistribution(v1, mu1, lambda1));
 	mix_dist.SetM2(MainDistribution(v2, mu2, lambda2));
 
@@ -265,7 +265,7 @@ void EmpMixDistributionWork()
 
 	double p = ReadDoubleOrDefault("Form Parameter (p, default = 0.5): ", 0.5);
 
-	MixDistribution mix_dist;
+	MixDistribution<MainDistribution, MainDistribution> mix_dist;
 	mix_dist.SetM1(MainDistribution(v1, mu1, lambda1));
 	mix_dist.SetM2(MainDistribution(v2, mu2, lambda2));
 

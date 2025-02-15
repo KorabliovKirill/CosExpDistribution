@@ -7,8 +7,9 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include "interface.hpp"
 
-class MainDistribution
+class MainDistribution : public IDistribution, public IPersistent
 {
 private:
 	double v;
@@ -26,11 +27,11 @@ public:
 	MainDistribution(FILE *file);
 	MainDistribution(std::string path);
 	~MainDistribution();
-	double pdf(double x) const;
-	double expectation() const;
-	double variance() const;
-	double skewness() const;
-	double excessKurtosis() const;
+	double pdf(double x) const override;
+	double expectation() const override;
+	double variance() const override;
+	double skewness() const override;
+	double excessKurtosis() const override;
 	double GetV() const;
 	void SetV(double v);
 	double GetMu() const;
@@ -40,6 +41,8 @@ public:
 	double GetA() const;
 	double GetK() const;
 	double GetP() const;
-	double generate() const;
+	double generate() const override;
 	void generateGraphPoints(std::string filename);
+	void save_params(std::string filename) const override; // сохранение атрибутов в файл
+	void load_params(std::string filename) override;	   // загрузка атрибутов из файла
 };

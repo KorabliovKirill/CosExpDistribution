@@ -6,7 +6,6 @@ add_executable(CosExpDistribution
     src/main.cpp
     src/distribution.cpp
     src/distribution.hpp
-    src/mix_distribution.cpp
     src/mix_distribution.hpp
     src/emp_distribution.cpp
     src/emp_distribution.hpp
@@ -16,4 +15,5 @@ add_executable(CosExpDistribution
     tests/mix_distribution_test.hpp
     tests/emp_distribution_test.cpp
     tests/emp_distribution_test.hpp
+    src/interface.hpp
 )
