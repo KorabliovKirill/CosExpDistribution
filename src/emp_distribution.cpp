@@ -23,8 +23,6 @@ void EmpiricalDistribution::calculateDensity() {
   double samples_len = max_ - min_;
 
   // Проверка диапазона
-  std::cout << "Min: " << min_ << ", Max: " << max_
-            << ", Samples length: " << samples_len << std::endl;
   if (samples_len <= 0) {
     std::cerr << "Error: Samples length is zero or negative!" << std::endl;
     return;
@@ -32,7 +30,6 @@ void EmpiricalDistribution::calculateDensity() {
 
   // Вычисляем количество интервалов по формуле Стёрджеса
   size_ = static_cast<size_t>(1 + std::log2(samples_.size()));
-  std::cout << "Number of bins (size_): " << size_ << std::endl;
 
   // Инициализация вектора плотностей (fi) нулями
   density_.resize(size_, 0.0);
@@ -44,8 +41,6 @@ void EmpiricalDistribution::calculateDensity() {
     double lower_bound = min_ + (static_cast<double>(i) / size_) * samples_len;
     double upper_bound =
         min_ + (static_cast<double>(i + 1) / size_) * samples_len;
-    std::cout << "Bin " << i << ": Lower bound: " << lower_bound
-              << ", Upper bound: " << upper_bound << std::endl;
 
     while (j < samples_.size() && samples_[j] < upper_bound) {
       if (samples_[j] >=
@@ -59,8 +54,6 @@ void EmpiricalDistribution::calculateDensity() {
     // Нормализация плотности
     density_[i] =
         static_cast<double>(ni) / (samples_.size() * (samples_len / size_));
-    std::cout << "Bin " << i << ": ni=" << ni << ", Density=" << density_[i]
-              << std::endl;
   }
 
   // Проверка суммарной плотности (должна быть близка к 1.0 для нормализованной
@@ -69,7 +62,6 @@ void EmpiricalDistribution::calculateDensity() {
   for (double d : density_) {
     sum_density += d;
   }
-  std::cout << "Sum of densities: " << sum_density << std::endl;
 }
 
 // Конструкторы
@@ -202,8 +194,6 @@ void EmpiricalDistribution::generateGraphPoints(
   double samples_len = samples_max - samples_min;
 
   // Проверка диапазона
-  std::cout << "Graph range - Min: " << samples_min << ", Max: " << samples_max
-            << ", Length: " << samples_len << std::endl;
   if (samples_len <= 0) {
     std::cerr
         << "Error: Samples length is zero or negative in generateGraphPoints!"
@@ -215,10 +205,8 @@ void EmpiricalDistribution::generateGraphPoints(
   // Определяем количество интервалов (используем size_, вычисленное в
   // calculateDensity)
   size_t k = size_;
-  std::cout << "Number of bins (k): " << k << std::endl;
 
   // Проверка density_ (плотностей бинов)
-  std::cout << "Densities (density_): ";
   for (size_t i = 0; i < k; ++i) {
     std::cout << density_[i] << " ";
   }
@@ -239,8 +227,7 @@ void EmpiricalDistribution::generateGraphPoints(
         bin_index++;
       }
       double density = density_[bin_index]; // Используем плотности из density_
-      std::cout << "x=" << x << ", bin_index=" << bin_index
-                << ", density=" << density << std::endl;
+
       file << x << '\t' << density << std::endl;
     }
   }
