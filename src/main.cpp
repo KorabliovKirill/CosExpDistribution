@@ -1,9 +1,10 @@
-#include "distribution.hpp"
-#include "mix_distribution.hpp"
-#include "emp_distribution.hpp"
+#include "../tests/emp_distribution_test.hpp"
 #include "../tests/main_distribution_test.hpp"
 #include "../tests/mix_distribution_test.hpp"
-#include "../tests/emp_distribution_test.hpp"
+#include "distribution.hpp"
+#include "emp_distribution.hpp"
+#include "mix_distribution.hpp"
+#include <chrono>
 #include <sstream>
 
 std::string distributions_path = "../graphs/distributions/";
@@ -17,330 +18,368 @@ void EmpMainDistributionWork();
 void EmpMixDistributionWork();
 void Tests();
 
-int main()
-{
-	int switcher;
-	bool exit = false;
+int main() {
+  int switcher;
+  bool exit = false;
 
-	while (!exit)
-	{
-		std::cout << "1. Main Distribution" << std::endl;
-		std::cout << "2. Mix Distribution" << std::endl;
-		std::cout << "3. Empiric Main Distribution" << std::endl;
-		std::cout << "4. Empiric Mix Distribution" << std::endl;
-		std::cout << "5. Tests" << std::endl;
-		std::cout << "0. Exit" << std::endl;
-		std::cin >> switcher;
+  while (!exit) {
+    std::cout << "1. Main Distribution" << std::endl;
+    std::cout << "2. Mix Distribution" << std::endl;
+    std::cout << "3. Empiric Main Distribution" << std::endl;
+    std::cout << "4. Empiric Mix Distribution" << std::endl;
+    std::cout << "5. Tests" << std::endl;
+    std::cout << "0. Exit" << std::endl;
+    std::cin >> switcher;
 
-		switch (switcher)
-		{
-		case (1):
-			MainDistributionWork();
-			break;
-		case (2):
-			MixDistributionWork();
-			break;
-		case (3):
-			EmpMainDistributionWork();
-			break;
-		case (4):
-			EmpMixDistributionWork();
-			break;
-		case (5):
-			Tests();
-			break;
-		case (0):
-			exit = true;
-			break;
+    switch (switcher) {
+    case (1):
+      MainDistributionWork();
+      break;
+    case (2):
+      MixDistributionWork();
+      break;
+    case (3):
+      EmpMainDistributionWork();
+      break;
+    case (4):
+      EmpMixDistributionWork();
+      break;
+    case (5):
+      Tests();
+      break;
+    case (0):
+      exit = true;
+      break;
 
-		default:
-			std::cout << "Error! Try again." << std::endl;
-			break;
-		}
-	}
+    default:
+      std::cout << "Error! Try again." << std::endl;
+      break;
+    }
+  }
 }
 
-double ReadDoubleOrDefault(const std::string &prompt, double defaultValue)
-{
-	while (true)
-	{
-		std::cout << prompt; // Выводим приглашение к вводу
-		std::string input;
-		std::getline(std::cin, input);
+double ReadDoubleOrDefault(const std::string &prompt, double defaultValue) {
+  while (true) {
+    std::cout << prompt; // Выводим приглашение к вводу
+    std::string input;
+    std::getline(std::cin, input);
 
-		if (input.empty())
-		{
-			return defaultValue; // Если пользователь просто нажал Enter, возвращаем значение по умолчанию
-		}
+    if (input.empty()) {
+      return defaultValue; // Если пользователь просто нажал Enter, возвращаем
+                           // значение по умолчанию
+    }
 
-		std::stringstream ss(input);
-		double value;
-		if (ss >> value)
-		{
-			return value; // Если ввод успешно преобразован в число, возвращаем его
-		}
+    std::stringstream ss(input);
+    double value;
+    if (ss >> value) {
+      return value; // Если ввод успешно преобразован в число, возвращаем его
+    }
 
-		std::cout << "Некорректный ввод. Попробуйте снова.\n";
-	}
+    std::cout << "Некорректный ввод. Попробуйте снова.\n";
+  }
 }
 
-void MainDistributionWork()
-{
-	double x;
-	static int s_number = 1;
-	FILE *file = fopen("../res/distribution_data.txt", "r");
-	std::string name = "distribution";
+void MainDistributionWork() {
+  double x;
+  static int s_number = 1;
+  FILE *file = fopen("../res/distribution_data.txt", "r");
+  std::string name = "distribution";
 
-	std::cout << "X: ";
-	std::cin >> x;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Очистка буфера после ввода числа
+  std::cout << "X: ";
+  std::cin >> x;
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
+                  '\n'); // Очистка буфера после ввода числа
 
-	double v = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
-	double mu = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
-	double lambda = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
+  double v = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+  double mu = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+  double lambda =
+      ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
 
-	// MainDistribution dist;
-	MainDistribution dist(v, mu, lambda);
-	// MainDistribution dist(file);
-	// MainDistribution dist("../res/distribution_data.txt");
+  // MainDistribution dist;
+  MainDistribution dist(v, mu, lambda);
+  // MainDistribution dist(file);
+  // MainDistribution dist("../res/distribution_data.txt");
 
-	// try
-	// {
-	// 	dist.SetV(v);
-	// }
-	// catch (char const *exV)
-	// {
-	// 	std::cout << exV << std::endl;
-	// 	std::abort();
-	// }
+  // try
+  // {
+  // 	dist.SetV(v);
+  // }
+  // catch (char const *exV)
+  // {
+  // 	std::cout << exV << std::endl;
+  // 	std::abort();
+  // }
 
-	// try
-	// {
-	// 	dist.SetLambda(lambda);
-	// }
-	// catch (char const *exLambda)
-	// {
-	// 	std::cout << exLambda << std::endl;
-	// 	std::abort();
-	// }
+  // try
+  // {
+  // 	dist.SetLambda(lambda);
+  // }
+  // catch (char const *exLambda)
+  // {
+  // 	std::cout << exLambda << std::endl;
+  // 	std::abort();
+  // }
 
-	// dist.SetMu(mu);
+  // dist.SetMu(mu);
 
-	std::cout << "Mathematical Expectation: " << dist.expectation() << std::endl;
-	std::cout << "Variance: " << dist.variance() << std::endl;
-	std::cout << "Excess Kurtosis: " << dist.excessKurtosis() << std::endl;
-	std::cout << "P: " << dist.GetP() << std::endl;
-	std::cout << "PDF: " << dist.pdf(x) << std::endl;
-	std::cout << "Skewness: " << dist.skewness() << std::endl;
-	std::cout << "Random sample: " << dist.generate() << std::endl;
+  std::cout << "Mathematical Expectation: " << dist.expectation() << std::endl;
+  std::cout << "Variance: " << dist.variance() << std::endl;
+  std::cout << "Excess Kurtosis: " << dist.excessKurtosis() << std::endl;
+  std::cout << "P: " << dist.GetP() << std::endl;
+  std::cout << "PDF: " << dist.pdf(x) << std::endl;
+  std::cout << "Skewness: " << dist.skewness() << std::endl;
+  std::cout << "Random sample: " << dist.generate() << std::endl;
 
-	std::string file_name = distributions_path + name + std::to_string(s_number) + ".txt";
-	dist.generateGraphPoints(file_name);
-	s_number++;
+  std::string file_name =
+      distributions_path + name + std::to_string(s_number) + ".txt";
+  dist.generateGraphPoints(file_name);
+  s_number++;
 }
 
-void MixDistributionWork()
-{
-	double x;
-	static int s_mix_number = 1;
-	std::string name = "mix_distribution";
+void MixDistributionWork() {
+  double x;
+  static int s_mix_number = 1;
+  std::string name = "mix_distribution";
 
-	std::cout << "X: ";
-	std::cin >> x;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  std::cout << "X: ";
+  std::cin >> x;
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-	double v1 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
-	double mu1 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
-	double lambda1 = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
+  double v1 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+  double mu1 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+  double lambda1 =
+      ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
 
-	double v2 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
-	double mu2 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
-	double lambda2 = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
+  double v2 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+  double mu2 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+  double lambda2 =
+      ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
 
-	double p = ReadDoubleOrDefault("Form Parameter (p, default = 0.5): ", 0.5);
+  double p = ReadDoubleOrDefault("Form Parameter (p, default = 0.5): ", 0.5);
 
-	MixDistribution<MainDistribution, MainDistribution> mix_dist;
-	mix_dist.SetM1(MainDistribution(v1, mu1, lambda1));
-	mix_dist.SetM2(MainDistribution(v2, mu2, lambda2));
+  MixDistribution<MainDistribution, MainDistribution> mix_dist;
+  mix_dist.SetM1(MainDistribution(v1, mu1, lambda1));
+  mix_dist.SetM2(MainDistribution(v2, mu2, lambda2));
 
-	std::cout << "Mathematical Expectation: " << mix_dist.expectation() << std::endl;
-	std::cout << "Variance: " << mix_dist.variance() << std::endl;
-	std::cout << "Excess Kurtosis: " << mix_dist.excessKurtosis() << std::endl;
-	std::cout << "Skewness: " << mix_dist.skewness() << std::endl;
-	std::cout << "PDF: " << mix_dist.pdf(x) << std::endl;
-	std::cout << "Random sample: " << mix_dist.generate() << std::endl;
+  std::cout << "Mathematical Expectation: " << mix_dist.expectation()
+            << std::endl;
+  std::cout << "Variance: " << mix_dist.variance() << std::endl;
+  std::cout << "Excess Kurtosis: " << mix_dist.excessKurtosis() << std::endl;
+  std::cout << "Skewness: " << mix_dist.skewness() << std::endl;
+  std::cout << "PDF: " << mix_dist.pdf(x) << std::endl;
+  std::cout << "Random sample: " << mix_dist.generate() << std::endl;
 
-	std::string file_name = mix_distributions_path + name + std::to_string(s_mix_number) + ".txt";
-	mix_dist.generateGraphPoints(file_name);
-	s_mix_number++;
+  std::string file_name =
+      mix_distributions_path + name + std::to_string(s_mix_number) + ".txt";
+  mix_dist.generateGraphPoints(file_name);
+  s_mix_number++;
 }
 
-void EmpMainDistributionWork()
-{
-	int n;
-	double x;
-	static int s_emp_number = 1;
-	std::string name_emp = "emp_main_distribution";
-	std::string name = "distribution";
+void EmpMainDistributionWork() {
+  int n;
+  double x;
+  static int s_emp_number = 1;
+  std::string name_emp = "emp_main_distribution";
+  std::string name = "distribution";
 
-	std::vector<double> samples;
+  std::vector<double> samples;
 
-	std::cout << "X: ";
-	std::cin >> x;
-	std::cout << "N: ";
-	std::cin >> n;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  std::cout << "X: ";
+  std::cin >> x;
+  std::cout << "N: ";
+  std::cin >> n;
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-	double v = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
-	double mu = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
-	double lambda = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
+  double v = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+  double mu = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+  double lambda =
+      ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
 
-	MainDistribution dist;
+  MainDistribution dist;
 
-	try
-	{
-		dist.SetV(v);
-	}
-	catch (char const *exV)
-	{
-		std::cout << exV << std::endl;
-		std::abort();
-	}
+  try {
+    dist.SetV(v);
+  } catch (char const *exV) {
+    std::cout << exV << std::endl;
+    std::abort();
+  }
 
-	try
-	{
-		dist.SetLambda(lambda);
-	}
-	catch (char const *exLambda)
-	{
-		std::cout << exLambda << std::endl;
-		std::abort();
-	}
+  try {
+    dist.SetLambda(lambda);
+  } catch (char const *exLambda) {
+    std::cout << exLambda << std::endl;
+    std::abort();
+  }
 
-	dist.SetMu(mu);
+  dist.SetMu(mu);
 
-	EmpiricalDistribution emp_dist(dist, n);
+  EmpiricalDistribution emp_dist(dist, n);
 
-	std::cout << "PDF: " << emp_dist.pdf(x) << std::endl;
-	std::cout << "ER PDF: " << fabs(emp_dist.pdf(x) - dist.pdf(x)) << std::endl;
-	std::cout << "Mathematical Expectation: " << emp_dist.expectation() << std::endl;
-	std::cout << "ER Mathematical Expectation: " << fabs(emp_dist.expectation() - dist.expectation()) << std::endl;
-	std::cout << "Variance: " << emp_dist.variance() << std::endl;
-	std::cout << "ER Variance: " << fabs(emp_dist.variance() - dist.variance()) << std::endl;
-	std::cout << "Skewness: " << emp_dist.skewness() << std::endl;
-	std::cout << "ER Skewness: " << fabs(emp_dist.skewness() - dist.skewness()) << std::endl;
-	std::cout << "Excess Kurtosis: " << emp_dist.excessKurtosis() << std::endl;
-	std::cout << "ER Excess Kurtosis: " << fabs(emp_dist.excessKurtosis() - dist.excessKurtosis()) << std::endl;
+  std::cout << "PDF: " << emp_dist.pdf(x) << std::endl;
+  std::cout << "ER PDF: " << fabs(emp_dist.pdf(x) - dist.pdf(x)) << std::endl;
+  std::cout << "Mathematical Expectation: " << emp_dist.expectation()
+            << std::endl;
+  std::cout << "ER Mathematical Expectation: "
+            << fabs(emp_dist.expectation() - dist.expectation()) << std::endl;
+  std::cout << "Variance: " << emp_dist.variance() << std::endl;
+  std::cout << "ER Variance: " << fabs(emp_dist.variance() - dist.variance())
+            << std::endl;
+  std::cout << "Skewness: " << emp_dist.skewness() << std::endl;
+  std::cout << "ER Skewness: " << fabs(emp_dist.skewness() - dist.skewness())
+            << std::endl;
+  std::cout << "Excess Kurtosis: " << emp_dist.excessKurtosis() << std::endl;
+  std::cout << "ER Excess Kurtosis: "
+            << fabs(emp_dist.excessKurtosis() - dist.excessKurtosis())
+            << std::endl;
 
-	std::string file_name_emp = emp_distributions_path + name_emp + std::to_string(s_emp_number) + ".txt";
-	emp_dist.generateGraphPoints(file_name_emp);
-	std::string file_name = emp_distributions_path + name + std::to_string(s_emp_number) + ".txt";
-	dist.generateGraphPoints(file_name);
-	s_emp_number++;
+  std::string file_name_emp =
+      emp_distributions_path + name_emp + std::to_string(s_emp_number) + ".txt";
+  emp_dist.generateGraphPoints(file_name_emp);
+  std::string file_name =
+      emp_distributions_path + name + std::to_string(s_emp_number) + ".txt";
+  dist.generateGraphPoints(file_name);
+  s_emp_number++;
 }
 
-void EmpMixDistributionWork()
-{
-	int n;
-	double x;
-	static int s_emp_number = 1;
-	std::string name_emp = "emp_mix_distribution";
-	std::string name = "mix_distribution";
+void EmpMixDistributionWork() {
+  int n;
+  double x;
+  static int s_emp_number = 1;
+  std::string name_emp = "emp_mix_distribution";
+  std::string name = "mix_distribution";
 
-	std::vector<double> samples;
+  std::vector<double> samples;
 
-	std::cout << "X: ";
-	std::cin >> x;
-	std::cout << "N: ";
-	std::cin >> n;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  std::cout << "X: ";
+  std::cin >> x;
+  std::cout << "N: ";
+  std::cin >> n;
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-	double v1 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
-	double mu1 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
-	double lambda1 = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
+  double v1 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+  double mu1 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+  double lambda1 =
+      ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
 
-	double v2 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
-	double mu2 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
-	double lambda2 = ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
+  double v2 = ReadDoubleOrDefault("Form Parameter (v, default = 0.5): ", 0.5);
+  double mu2 = ReadDoubleOrDefault("Shift Parameter (mu, default = 0): ", 0);
+  double lambda2 =
+      ReadDoubleOrDefault("Scale Parameter (lambda, default = 1): ", 1);
 
-	double p = ReadDoubleOrDefault("Form Parameter (p, default = 0.5): ", 0.5);
+  double p = ReadDoubleOrDefault("Form Parameter (p, default = 0.5): ", 0.5);
 
-	MixDistribution<MainDistribution, MainDistribution> mix_dist;
-	mix_dist.SetM1(MainDistribution(v1, mu1, lambda1));
-	mix_dist.SetM2(MainDistribution(v2, mu2, lambda2));
+  MixDistribution<MainDistribution, MainDistribution> mix_dist;
+  mix_dist.SetM1(MainDistribution(v1, mu1, lambda1));
+  mix_dist.SetM2(MainDistribution(v2, mu2, lambda2));
 
-	EmpiricalDistribution emp_dist(mix_dist, n);
+  EmpiricalDistribution emp_dist(mix_dist, n);
 
-	std::cout << "PDF: " << emp_dist.pdf(x) << std::endl;
-	std::cout << "ER PDF: " << fabs(emp_dist.pdf(x) - mix_dist.pdf(x)) << std::endl;
-	std::cout << "Mathematical Expectation: " << emp_dist.expectation() << std::endl;
-	std::cout << "ER Mathematical Expectation: " << fabs(emp_dist.expectation() - mix_dist.expectation()) << std::endl;
-	std::cout << "Variance: " << emp_dist.variance() << std::endl;
-	std::cout << "ER Variance: " << fabs(emp_dist.variance() - mix_dist.variance()) << std::endl;
-	std::cout << "Skewness: " << emp_dist.skewness() << std::endl;
-	std::cout << "ER Skewness: " << fabs(emp_dist.skewness() - mix_dist.skewness()) << std::endl;
-	std::cout << "Excess Kurtosis: " << emp_dist.excessKurtosis() << std::endl;
-	std::cout << "ER Excess Kurtosis: " << fabs(emp_dist.excessKurtosis() - mix_dist.excessKurtosis()) << std::endl;
+  std::cout << "PDF: " << emp_dist.pdf(x) << std::endl;
+  std::cout << "ER PDF: " << fabs(emp_dist.pdf(x) - mix_dist.pdf(x))
+            << std::endl;
+  std::cout << "Mathematical Expectation: " << emp_dist.expectation()
+            << std::endl;
+  std::cout << "ER Mathematical Expectation: "
+            << fabs(emp_dist.expectation() - mix_dist.expectation())
+            << std::endl;
+  std::cout << "Variance: " << emp_dist.variance() << std::endl;
+  std::cout << "ER Variance: "
+            << fabs(emp_dist.variance() - mix_dist.variance()) << std::endl;
+  std::cout << "Skewness: " << emp_dist.skewness() << std::endl;
+  std::cout << "ER Skewness: "
+            << fabs(emp_dist.skewness() - mix_dist.skewness()) << std::endl;
+  std::cout << "Excess Kurtosis: " << emp_dist.excessKurtosis() << std::endl;
+  std::cout << "ER Excess Kurtosis: "
+            << fabs(emp_dist.excessKurtosis() - mix_dist.excessKurtosis())
+            << std::endl;
 
-	std::string file_name_emp = emp_distributions_path + name_emp + std::to_string(s_emp_number) + ".txt";
-	emp_dist.generateGraphPoints(file_name_emp);
-	std::string file_name = emp_distributions_path + name + std::to_string(s_emp_number) + ".txt";
-	mix_dist.generateGraphPoints(file_name);
-	s_emp_number++;
+  std::string file_name_emp =
+      emp_distributions_path + name_emp + std::to_string(s_emp_number) + ".txt";
+  emp_dist.generateGraphPoints(file_name_emp);
+  std::string file_name =
+      emp_distributions_path + name + std::to_string(s_emp_number) + ".txt";
+  mix_dist.generateGraphPoints(file_name);
+  s_emp_number++;
 }
 
-void Tests()
-{
-	std::string logFilePath = "../tests/test_log.txt";
-	std::ofstream logFile(logFilePath, std::ios::out | std::ios::trunc);
+void Tests() {
+  std::string logFilePath = "../tests/test_log.txt";
+  std::ofstream logFile(logFilePath, std::ios::out | std::ios::trunc);
 
-	if (!logFile)
-	{
-		std::cerr << "Ошибка открытия файла: " << logFilePath << std::endl;
-		return;
-	}
+  if (!logFile) {
+    std::cerr << "Ошибка открытия файла: " << logFilePath << std::endl;
+    return;
+  }
 
-	logFile << "Test 1 (Main distribution, mu=0, lambda=1):" << std::endl;
-	MainDistributionTest(distributions_path, 0.5, 0, 1, logFile);
-	logFile << "==========================" << std::endl;
+  logFile << "Test 1 (Main distribution, mu=0, lambda=1):" << std::endl;
+  MainDistributionTest(distributions_path, 0.5, 0, 1, logFile);
+  logFile << "==========================" << std::endl;
 
-	logFile << "Test 2 (Main distribution, mu!=0, lambda=2):" << std::endl;
-	MainDistributionTest(distributions_path, 0.2, -3, 2, logFile);
-	logFile << "==========================" << std::endl;
+  logFile << "Test 2 (Main distribution, mu!=0, lambda=2):" << std::endl;
+  MainDistributionTest(distributions_path, 0.2, -3, 2, logFile);
+  logFile << "==========================" << std::endl;
 
-	logFile << "Test 3 (Mix distribution, mu1=mu2!=0, lambda1=lambda2=2, v1-v2):" << std::endl;
-	MixDistributionTest(mix_distributions_path, 0.5, -3, 2, 0.5, -3, 2, 0.7, logFile);
-	logFile << "==========================" << std::endl;
+  logFile << "Test 3 (Mix distribution, mu1=mu2!=0, lambda1=lambda2=2, v1-v2):"
+          << std::endl;
+  MixDistributionTest(mix_distributions_path, 0.5, -3, 2, 0.5, -3, 2, 0.7,
+                      logFile);
+  logFile << "==========================" << std::endl;
 
-	logFile << "Test 4 (Mix distribution, mu1!=m2, p = 0.5):" << std::endl;
-	MixDistributionTest(mix_distributions_path, 1, -3, 1, 1, 2, 1, 0.5, logFile);
-	logFile << "==========================" << std::endl;
+  logFile << "Test 4 (Mix distribution, mu1!=m2, p = 0.5):" << std::endl;
+  MixDistributionTest(mix_distributions_path, 1, -3, 1, 1, 2, 1, 0.5, logFile);
+  logFile << "==========================" << std::endl;
 
-	logFile << "Test 5 (Mix distribution, mu1=mu2=0, lambda1=1, lambda2=3, p = 0.5):" << std::endl;
-	MixDistributionTest(mix_distributions_path, 0.2, 0, 1, 0.2, 0, 3, 0.5, logFile);
-	logFile << "==========================" << std::endl;
+  logFile
+      << "Test 5 (Mix distribution, mu1=mu2=0, lambda1=1, lambda2=3, p = 0.5):"
+      << std::endl;
+  MixDistributionTest(mix_distributions_path, 0.2, 0, 1, 0.2, 0, 3, 0.5,
+                      logFile);
+  logFile << "==========================" << std::endl;
 
-	logFile << "Test 6 (3.3.1)" << std::endl;
-	std::vector<int> N = {100, 1000, 10000, 100000};
-	for (size_t i = 0; i < N.size(); ++i)
-	{
-		EmpDistributionTest1(emp_distributions_path, 0.4, -3, 1, N[i], logFile);
-		logFile << "==========================" << std::endl;
-		EmpDistributionTest1(emp_distributions_path, 0.3, -2, 1, 0.6, 2, 4, 0.8, N[i], logFile);
-		logFile << "==========================" << std::endl;
-	}
+  logFile << "Test 6 (3.3.1)" << std::endl;
+  std::vector<int> N = {100, 1000, 10000, 100000};
+  for (size_t i = 0; i < N.size(); ++i) {
+    auto start_1 = std::chrono::steady_clock::now();
+    EmpDistributionTest1(emp_distributions_path, 0.4, -3, 1, N[i], logFile);
+    auto end_1 = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_1 = end_1 - start_1;
+    logFile << "Time for Empiric distribution: " << elapsed_1.count()
+            << std::endl;
+    logFile << "==========================" << std::endl;
 
-	logFile << "Test 7 (3.3.2)" << std::endl;
-	for (size_t i = 0; i < N.size(); ++i)
-	{
-		EmpDistributionTest2(emp_distributions_path, 0.4, -3, 1, N[i], logFile);
-		logFile << "==========================" << std::endl;
-		EmpDistributionTest2(emp_distributions_path, 0.3, -2, 1, 0.6, 2, 4, 0.8, N[i], logFile);
-		logFile << "==========================" << std::endl;
-	}
+    auto start_2 = std::chrono::steady_clock::now();
+    EmpDistributionTest1(emp_distributions_path, 0.3, -2, 1, 0.6, 2, 4, 0.8,
+                         N[i], logFile);
+    auto end_2 = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_2 = end_2 - start_2;
+    logFile << "Time for Empiric distribution: " << elapsed_2.count()
+            << std::endl;
+    logFile << "==========================" << std::endl;
+  }
 
-	logFile << "==========================" << std::endl;
-	logFile.close();
+  logFile << "Test 7 (3.3.2)" << std::endl;
+  for (size_t i = 0; i < N.size(); ++i) {
+    auto start_1 = std::chrono::steady_clock::now();
+    EmpDistributionTest2(emp_distributions_path, 0.4, -3, 1, N[i], logFile);
+    auto end_1 = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_1 = end_1 - start_1;
+    logFile << "Time for Empiric distribution: " << elapsed_1.count()
+            << std::endl;
+    logFile << "==========================" << std::endl;
 
-	std::cout << "Все тесты пройдены. Результаты сохранены в " << logFilePath << std::endl;
+    auto start_2 = std::chrono::steady_clock::now();
+    EmpDistributionTest2(emp_distributions_path, 0.3, -2, 1, 0.6, 2, 4, 0.8,
+                         N[i], logFile);
+    auto end_2 = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_2 = end_2 - start_2;
+    logFile << "Time for Empiric distribution: " << elapsed_2.count()
+            << std::endl;
+    logFile << "==========================" << std::endl;
+  }
+
+  logFile << "==========================" << std::endl;
+  logFile.close();
+
+  std::cout << "Все тесты пройдены. Результаты сохранены в " << logFilePath
+            << std::endl;
 }

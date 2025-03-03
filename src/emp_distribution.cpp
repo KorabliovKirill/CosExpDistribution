@@ -9,13 +9,6 @@ void EmpiricalDistribution::calculateDensity() {
     return;
   }
 
-  // Вывод текущих данных samples_ для отладки
-  std::cout << "Samples before sorting: ";
-  for (double sample : samples_) {
-    std::cout << sample << " ";
-  }
-  std::cout << std::endl;
-
   // Сортируем выборку
   std::sort(samples_.begin(), samples_.end());
   min_ = samples_.front();
@@ -205,12 +198,6 @@ void EmpiricalDistribution::generateGraphPoints(
   // Определяем количество интервалов (используем size_, вычисленное в
   // calculateDensity)
   size_t k = size_;
-
-  // Проверка density_ (плотностей бинов)
-  for (size_t i = 0; i < k; ++i) {
-    std::cout << density_[i] << " ";
-  }
-  std::cout << std::endl;
 
   // Генерация значений для построения графика
   size_t bin_index = 0;

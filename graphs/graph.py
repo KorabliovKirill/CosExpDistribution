@@ -8,8 +8,6 @@ def process_directory(directory):
     if "emp_distribution" in directory:
         # Получаем все файлы в директории
         files = os.listdir(directory)
-        print(f"Обработка директории: {directory}")
-        print(f"Найденные файлы: {files}")
 
         # Обрабатываем пары для основных распределений
         process_file_pairs(
@@ -55,7 +53,6 @@ def process_directory(directory):
                     os.makedirs(directory, exist_ok=True)  # Создаём директорию, если её нет
                     output_filename = os.path.join(directory, filename.replace(".txt", ".png"))
                     plt.savefig(output_filename)
-                    plt.show()  # Показываем график на экране (можно убрать, если не нужно)
                     plt.close()
 
                 except Exception as e:
